@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ApexTrade | Secure Login</title>
+    <link rel="stylesheet" href="/login.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <div class="market-bg">
+        <div class="grid-lines"></div>
+        <div class="glow-orb orb-green"></div>
+        <div class="glow-orb orb-red"></div>
+    </div>
+
+    <div class="login-container">
+        <div class="login-header">
+            <div class="logo">
+                <i class="fa-solid fa-chart-line-upward icon-bull"></i>
+                <span>APEX<span class="highlight">TRADE</span></span>
+            </div>
+            <p class="subtitle">Welcome back, Trader. institutional grade security.</p>
+        </div>
+
+        <form id="loginForm" onsubmit="handleLogin(event)">
+            <div class="input-group">
+                <label for="email">Trader ID / Email</label>
+                <div class="input-wrapper">
+                    <i class="fa-regular fa-envelope input-icon"></i>
+                    <input type="email" id="email" placeholder="name@exchange.com" required>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <div class="label-row">
+                    <label for="password">Password</label>
+                    <a href="#" class="forgot-link">Forgot?</a>
+                </div>
+                <div class="input-wrapper">
+                    <i class="fa-solid fa-lock input-icon"></i>
+                    <input type="password" id="password" placeholder="••••••••" required>
+                    <i class="fa-regular fa-eye-slash toggle-password" onclick="togglePass()"></i>
+                </div>
+            </div>
+
+            <div class="ticker-wrapper">
+                <span class="ticker-item up">BTC +3.4% <i class="fa-solid fa-caret-up"></i></span>
+                <span class="ticker-item down">NIFTY -0.8% <i class="fa-solid fa-caret-down"></i></span>
+                <span class="ticker-item up">AAPL +1.2% <i class="fa-solid fa-caret-up"></i></span>
+            </div>
+
+            <button type="submit" class="submit-btn" id="submitBtn">
+                <span>Secure Sign In</span>
+                <i class="fa-solid fa-arrow-right-to-bracket"></i>
+            </button>
+        </form>
+
+        <div class="login-footer">
+            <p>Don't have an account? <a href="signup">Open Account</a></p>
+        </div>
+    </div>
+
+    <script src="/login.js"></script>
+</body>
+</html>

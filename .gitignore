@@ -1,0 +1,28 @@
+# Build output
+build/
+
+Crow framework
+crow/
+CrowCppCrow library(framework)/
+
+#VS code
+.vscode/
+
+#Object files
+*.o
+*.obj
+
+#CMake generated files
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+CPackConfig.cmake
+CPackSourceConfig.cmake
+
+# Executables
+*.exe 
+
+# Secrets
+.env
+config.example.h
