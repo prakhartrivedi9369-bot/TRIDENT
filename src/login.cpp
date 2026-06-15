@@ -32,8 +32,8 @@ void handleLogin(const crow::request& req, crow::response& res)
         // 3.Response Generation (If-Else logic)
         if(login_status == 1)
         {
-            res.code = 200; //ok
-            res.body = "{\"message\": \"Login successful!\", \"status\": \"success\"}";
+            res.code = 201;
+            res.body = "{\"status\": \"otp_required\",""\"message\": \"Login successful!\"}";
         }
         else if(login_status == 0)
         {

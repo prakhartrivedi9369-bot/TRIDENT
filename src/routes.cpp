@@ -63,6 +63,17 @@ void registerRoutes(crow::SimpleApp& app)
 
            return res;
      });
+     CROW_ROUTE(app, "/otp")([]()
+     {
+           ifstream file("../frontend/HTML/otp.html");
+
+           if(!file.is_open()) return crow::response(404);
+
+           stringstream buffer;
+           buffer << file.rdbuf();
+
+           return crow::response (buffer.str());
+     });
      
      //Signup Route
      CROW_ROUTE(app, "/signup")([]()

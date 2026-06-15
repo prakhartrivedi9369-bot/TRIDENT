@@ -13,7 +13,7 @@ int createUserInDB(const string& username, const string& email, const string& pa
         return -1;
     }
      
-    mongoc_collection_t *collection = mongoc_client_get_collection(global_db_client,"YOUR_DATABASE_NAME","users");
+    mongoc_collection_t *collection = mongoc_client_get_collection(global_db_client,"YOUR_DATABASE_NAME_HERE","users");
     bson_error_t error;
 
     string email_json = "{\"email\":\"" + email + "\"}";

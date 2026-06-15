@@ -334,7 +334,7 @@
             </label>
 
             <button type="submit" class="submit-btn" id="submitBtn">
-                <span>Open Trading Account</span>
+                <span>Open trading account</a></span>
             </button>
         </form>
 
@@ -424,13 +424,13 @@
 
                 const data = await response.json();
 
-                if(response.ok)
+                if(data.status === "otp_required")
                 {
-                    alert(data.message || "Account created");
+                    window.location.href = "/otp";
                 }
                 else
                 {
-                    alert(data.message || "Signup Failed");
+                    alert(data.message);
                 }
             }
             catch(error)

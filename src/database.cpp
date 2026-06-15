@@ -11,7 +11,7 @@ void init_database()
     mongoc_init();
 
     bson_error_t error;
-    const char *env_uri=getenv("YOUR_MONGODB_URL_HERE");
+    const char *env_uri=getenv("YOUR_MOGODB_URL_HERE");
 
     mongoc_uri_t *uri = mongoc_uri_new_with_error(env_uri, &error);
     
