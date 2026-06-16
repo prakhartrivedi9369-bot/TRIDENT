@@ -391,6 +391,8 @@ form.addEventListener("submit",async(e)=>{
 
   const code = [...inputs].map(i=>i.value).join("");
 
+  const email = localStorage.getItem("userEmail");
+
   if(code.length !== 6){
 
     showStatus("Please enter all 6 digits.","error");
@@ -409,19 +411,24 @@ form.addEventListener("submit",async(e)=>{
   showStatus("Verifying code...","loading");
 
   await wait(1500);
+  
+  // OTP logic
+  const response = await fetch('/verify-otp',{
+    method:'POST',
+    headers:{
+        'Content-Type':'application/json'
+    },
+    body: JSON.stringify({
+         email: email,
+         otp: code
+    })
+  });
 
-  /*
-    DEMO OTP
-    Replace with backend API verification
-  */
+  const correctOTP = await response.json();
 
-  const correctOTP = "246810";
+  if(correctOTP.success){
 
-  if(code === correctOTP){
-
-    showStatus("Verification successful! Redirecting...","success");
-
-    await wait(1500);
+    alert("OTP Verified");
 
     // Redirect Example
     // window.location.href = "/dashboard";

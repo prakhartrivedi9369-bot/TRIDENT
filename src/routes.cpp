@@ -2,6 +2,7 @@
 #include "../Headers/login.h"
 #include "../Headers/database.h"
 #include "../Headers/signup.h"
+#include "../Headers/otp.h"
 #include "crow.h"
 
 using namespace std;
@@ -73,6 +74,39 @@ void registerRoutes(crow::SimpleApp& app)
            buffer << file.rdbuf();
 
            return crow::response (buffer.str());
+     });
+     CROW_ROUTE(app, "/send-otp").methods("POST"_method)([](const crow::request& req)
+     {
+           auto body = crow::json::load(req.body);
+
+           string email = body["email"].s();
+           string otp = generateOTP();
+
+           OTPData data;
+           data.otp = otp;
+           data.createdAt = time(nullptr);
+
+           otpStore[email] = data;
+           
+           cout<<"EMAIL"<<" :"<< email <<endl;
+           cout<<"OTP"<<" :"<< otp << endl;
+
+           return crow::response(200);
+     });
+     CROW_ROUTE(app, "/verify-otp").methods("POST"_method)([](const crow::request& req)
+     {
+       auto body = crow::json::load(req.body);
+
+       string email = body["email"].s();
+       string otp = body["otp"].s();
+
+       bool result = verifyOTP(email, otp);
+
+       crow::json::wvalue response;
+
+       response["success"]= result;
+
+       return crow::response(response);
      });
      
      //Signup Route

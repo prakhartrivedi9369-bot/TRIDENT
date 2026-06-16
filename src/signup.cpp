@@ -29,7 +29,7 @@ void handle_signup(const crow::request& req, crow::response& res)
 
          if(signup_status == 1)
          {
-            res.code = 201;
+            res.code = 200;
             res.body = "{\"status\":\"otp_required\",""\"message\":\"OTP sent to email\"}";
          }
          else if(signup_status == 0)

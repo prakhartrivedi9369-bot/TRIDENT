@@ -21,7 +21,15 @@ include_directories("C:/msys64/mingw64/include")
 add_subdirectory(crow)
 
 # Apne main executable ko define karein
-add_executable(my_app src/main.cpp src/login.cpp src/database.cpp src/signup.cpp src/routes.cpp Database_check/login_auth.cpp Database_check/signup_auth.cpp)
+add_executable(my_app 
+               src/main.cpp 
+               src/login.cpp 
+               src/database.cpp 
+               src/signup.cpp 
+               src/routes.cpp 
+               src/otp.cpp
+               Database_check/login_auth.cpp 
+               Database_check/signup_auth.cpp)
 
 #----------------------------------------------------------------------------------------
 # 3. Linking Libraries (Crow, Boost, Windows Networking, & MongoDB C Driver)

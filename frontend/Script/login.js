@@ -74,19 +74,6 @@ async function handleLogin(event) {
 
         submitBtn.disabled = false;
 
-        /*
-            Backend should return:
-            {
-                status: "success"
-            }
-
-            OR
-
-            {
-                status: "otp_required"
-            }
-        */
-
         // SUCCESS LOGIN
         if (
             result.status === "success" ||
@@ -98,14 +85,37 @@ async function handleLogin(event) {
             submitBtn.innerHTML =
                 '<span>Success <i class="fa-solid fa-check"></i></span>';
 
+
             // Small delay for animation
             setTimeout(() => {
 
                 // Redirect to OTP page
+                localStorage.setItem("userEmail", email);
                 window.location.href = "/otp";
 
             }, 1000);
 
+              // Call send-otp route
+             await fetch('/send-otp', {
+             method: 'POST',
+             headers: {
+                       'Content-Type': 'application/json'
+                      },
+                      body: JSON.stringify({
+                      email: email
+                   })
+             });
+
+            const otpdata = await otpResponse.json();
+
+            if(otpdata.success)
+            {
+                  alert("OTP sent to your given email");
+            }
+            else
+            {
+                  alert("OTP send failed");
+            }
         } else {
 
             alert(result.message || "Invalid Login");
