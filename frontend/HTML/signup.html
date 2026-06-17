@@ -439,18 +439,9 @@
                         })
                     });
 
+                    alert("OTP sent to entered email Successfully");
+
                     window.location.href = "/otp";
-
-                    const otpdata = await otpResponse.json();
-
-                    if(otpdata.success)
-                    {
-                             alert("OTP sent to your given email");
-                    }
-                    else
-                    {
-                             alert("OTP send failed");
-                    }             
                 }
                 else
                 {

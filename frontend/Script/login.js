@@ -60,11 +60,6 @@ async function handleLogin(event) {
             })
         });
 
-        // Response Check
-        if (!response.ok) {
-            throw new Error("Server Response Error");
-        }
-
         const result = await response.json();
 
         console.log(result);
@@ -75,10 +70,16 @@ async function handleLogin(event) {
         submitBtn.disabled = false;
 
         // SUCCESS LOGIN
-        if (
+        if(result.status === "Invalid_pass")
+        {
+            alert("Invalid Password");
+        }
+        else if 
+        (
             result.status === "success" ||
             result.status === "otp_required"
-        ) {
+        ) 
+        {
 
             submitBtn.style.background = '#00e676';
 
@@ -106,17 +107,10 @@ async function handleLogin(event) {
                    })
              });
 
-            const otpdata = await otpResponse.json();
-
-            if(otpdata.success)
-            {
-                  alert("OTP sent to your given email");
-            }
-            else
-            {
-                  alert("OTP send failed");
-            }
-        } else {
+            alert("OTP sent to registered email successfully");
+        }
+         else
+             {
 
             alert(result.message || "Invalid Login");
         }

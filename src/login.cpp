@@ -43,7 +43,7 @@ void handleLogin(const crow::request& req, crow::response& res)
         else if(login_status == 2)
         {
             res.code = 404;
-            res.body = "{\"status\":\"fail\",\"error\":\"Invalid password!\"}";
+            res.body = "{\"status\":\"Invalid_pass\"}";
         }
         else
         {
