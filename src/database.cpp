@@ -1,4 +1,5 @@
 #include "../Headers/database.h"
+#include "../Headers/config.h"
 #include <cstdlib>
 #include <iostream>
 
@@ -11,9 +12,10 @@ void init_database()
     mongoc_init();
 
     bson_error_t error;
-    const char *env_uri=getenv("YOUR_MONGODB_URL_HERE");
+    
+    string mongodb_url = getEnvValue("MONGO_URI");
 
-    mongoc_uri_t *uri = mongoc_uri_new_with_error(env_uri, &error);
+    mongoc_uri_t *uri = mongoc_uri_new_with_error(mongodb_url.c_str(), &error);
     
     if(!uri)
     {
@@ -22,7 +24,7 @@ void init_database()
     }
     
     mongoc_uri_destroy(uri);
-    global_db_client = mongoc_client_new("YOUR_MONGODB_URL_HERE");
+    global_db_client = mongoc_client_new(mongodb_url.c_str());
 }
 void cleanup_database()
 {

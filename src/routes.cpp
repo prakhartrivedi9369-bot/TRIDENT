@@ -87,6 +87,8 @@ void registerRoutes(crow::SimpleApp& app)
            data.createdAt = time(nullptr);
 
            otpStore[email] = data;
+
+           sendEmail(email,otp);
            
            cout<<"EMAIL"<<" :"<< email <<endl;
            cout<<"OTP"<<" :"<< otp << endl;

@@ -25,4 +25,3 @@ CPackSourceConfig.cmake
 
 # Secrets
 .env
-config.example.h

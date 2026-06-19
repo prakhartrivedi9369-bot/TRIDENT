@@ -28,6 +28,7 @@ add_executable(my_app
                src/signup.cpp 
                src/routes.cpp 
                src/otp.cpp
+               src/config.cpp
                Database_check/login_auth.cpp 
                Database_check/signup_auth.cpp)
 
@@ -51,4 +52,5 @@ target_link_libraries(my_app PRIVATE
     zstd
     ws2_32 
     mswsock
+    curl
 )

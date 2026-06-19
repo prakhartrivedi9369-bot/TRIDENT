@@ -25,3 +25,8 @@ bool verifyOTP
 
 bool storeOTP(const string& email,const string& otp);
 bool verifyOTP(const string& email,const string& otp);
+
+bool sendEmail(
+    const string&  recipient,
+    const string& otp
+);
