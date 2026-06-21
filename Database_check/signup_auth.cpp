@@ -1,4 +1,5 @@
 #include "../Headers/database.h"
+#include "../Headers/crypto_utils.h"
 #include <mongoc/mongoc.h>
 #include <bson/bson.h>
 #include <string>
@@ -13,7 +14,7 @@ int createUserInDB(const string& username, const string& email, const string& pa
         return -1;
     }
      
-    mongoc_collection_t *collection = mongoc_client_get_collection(global_db_client,"YOUR_DATABASE_NAME_HERE","users");
+    mongoc_collection_t *collection = mongoc_client_get_collection(global_db_client,"CPP_database","users");
     bson_error_t error;
 
     string email_json = "{\"email\":\"" + email + "\"}";
@@ -34,8 +35,13 @@ int createUserInDB(const string& username, const string& email, const string& pa
         return 0;
     }
 
-    string user_json = "{""\"username\":\"" + username + "\",""\"email\":\"" + email + "\",""\"password\":\"" + password + "\"""}";
-    bson_t *new_user = bson_new_from_json((const uint8_t*)user_json.c_str(),-1,&error);
+    string secure_hash = CryptoUtils::hash_password(password);
+
+    bson_t *new_user = BCON_NEW(
+    "username", BCON_UTF8(username.c_str()),
+    "email",    BCON_UTF8(email.c_str()),
+    "password", BCON_UTF8(secure_hash.c_str())
+    );
 
     if(!new_user)
     { 

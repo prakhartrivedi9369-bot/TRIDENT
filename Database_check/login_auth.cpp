@@ -1,4 +1,5 @@
 #include "../Headers/database.h"
+#include "../Headers/crypto_utils.h"
 #include <bson/bson.h>
 #include <mongoc/mongoc.h>
 #include <string>
@@ -7,39 +8,59 @@ using namespace std;
 
 int verifyCredentialsInDB(const string& email, const string& password)
 {
-       if(!global_db_client)
-       {
-          return -1;
-       }
-       mongoc_collection_t *collection = mongoc_client_get_collection(global_db_client, "YOUR_DATABASE_NAME_HERE", "users");
-       bson_error_t error;
+      if(!global_db_client)
+{
+    return -1;
+}
 
-       string email_json = "{\"email\":\"" + email + "\"}";
-       bson_t *email_query = bson_new_from_json((const uint8_t*)email_json.c_str(),-1,&error);
+mongoc_collection_t *collection = mongoc_client_get_collection(
+    global_db_client, "CPP_database", "users"
+);
+bson_error_t error;
 
-       int64_t email_count = mongoc_collection_count_documents(collection,email_query,NULL,NULL,NULL,&error);
-       bson_destroy(email_query);
+// STEP 1: Sirf email se document dhundo
+bson_t *email_query = BCON_NEW("email", BCON_UTF8(email.c_str()));
 
-       if(email_count<=0)
-       {
-          mongoc_collection_destroy(collection);
-          return 0;
-       }
+mongoc_cursor_t *cursor = mongoc_collection_find_with_opts(
+    collection, email_query, NULL, NULL
+);
+bson_destroy(email_query);
 
-       string full_json = "{\"email\":\"" + email + "\", \"password\":\"" + password + "\"}";
-       bson_t*full_query = bson_new_from_json((const uint8_t*)full_json.c_str(),-1,&error);
+// STEP 2: Document mila ya nahi
+const bson_t *doc;
+if(!mongoc_cursor_next(cursor, &doc))
+{
+    // Email DB mein nahi mili
+    mongoc_cursor_destroy(cursor);
+    mongoc_collection_destroy(collection);
+    return 0;
+}
 
-       int64_t full_count = mongoc_collection_count_documents(collection,full_query,NULL,NULL,NULL,&error);
-       bson_destroy(full_query);
+// STEP 3: DB se hashed password nikalo
+string stored_hash = "";
+bson_iter_t iter;
 
-       mongoc_collection_destroy(collection);
-       
-       if(full_count>0)
-       {
-          return 1;
-       }
-       else
-       {
-         return 2;
-       }
+if(bson_iter_init_find(&iter, doc, "password") && BSON_ITER_HOLDS_UTF8(&iter))
+{
+    stored_hash = bson_iter_utf8(&iter, nullptr);
+}
+
+mongoc_cursor_destroy(cursor);
+mongoc_collection_destroy(collection);
+
+// STEP 4: Hash empty check
+if(stored_hash.empty())
+{
+    return -1; // Server side problem
+}
+
+// STEP 5: Libsodium se verify karo
+if(CryptoUtils::verify_password(password, stored_hash))
+{
+    return 1; // ✅ Success
+}
+else
+{
+    return 2; // ❌ Password galat
+}
 }

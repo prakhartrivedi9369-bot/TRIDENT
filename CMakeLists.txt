@@ -12,6 +12,7 @@ add_compile_definitions(CROW_ENABLE_SSL=OFF)
 #---------------------------------------------------------------------------------------
 include_directories(crow/include)
 include_directories("C:/msys64/mingw64/include")
+include_directories("C:/msys64/ucrt64/include")
 # Note-- Use paths according to your local system.
 
 #--------------------------------------------------------------------------------------
@@ -28,7 +29,8 @@ add_executable(my_app
                src/signup.cpp 
                src/routes.cpp 
                src/otp.cpp
-               src/config.cpp
+               src/env_config.cpp
+               src/crypto_utils.cpp
                Database_check/login_auth.cpp 
                Database_check/signup_auth.cpp)
 
@@ -37,6 +39,7 @@ add_executable(my_app
 #----------------------------------------------------------------------------------------
 target_link_libraries(my_app PRIVATE
     Crow::Crow
+    "C:/msys64/ucrt64/lib/libsodium.a"
     "C:/msys64/ucrt64/lib/libmongoc2.a"
     "C:/msys64/ucrt64/lib/libbson2.a"
     ssl

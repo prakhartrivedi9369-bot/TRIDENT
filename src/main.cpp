@@ -2,7 +2,9 @@
 #include "../Headers/routes.h"
 #include "../Headers/database.h"
 #include <iostream>
-#include "../Headers/config.h"
+#include "../Headers/env_config.h"
+#include "../Headers/crypto_utils.h"
+
 using namespace std;
 
 void handlelogin(const crow::request& req, crow::response& res);
@@ -11,7 +13,12 @@ int main()
 {
      loadEnv("../.env");
 
-     //Server chalane se phele databse connect karo
+     if(!CryptoUtils::init())
+     {
+          cerr << "Failed to initialize libsodium\n";
+     }
+
+     //Server chalane se phele databse connect karos
      init_database();  
 
      crow::SimpleApp app;

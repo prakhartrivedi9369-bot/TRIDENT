@@ -427,6 +427,7 @@
                 if(data.status === "otp_required")
                 {
                     localStorage.setItem("userEmail", email);
+                    
 
                       // Call send-otp route
                     await fetch('/send-otp', {
