@@ -2,4 +2,4 @@ STOCK-EXCHANGE-WEB
 
 MADE FOR HIGH PERFORMANCE--------------------------------
 
-Password hashing is started today.
+JWT(JSON web token) authentication started today$$$$$$$
