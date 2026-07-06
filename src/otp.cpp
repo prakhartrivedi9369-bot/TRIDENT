@@ -1,9 +1,10 @@
-#include "../Headers/otp.h"
-#include "../Headers/env_config.h"
+#include "otp.h"
+#include "env_config.h"
 #include <random>
 #include <curl/curl.h>
 #include <sstream>
 #include <string>
+#include <iostream>
 
 using namespace std;
 
@@ -76,9 +77,6 @@ bool sendEmail(const string& recipient,const string& otp)
 
     string apiHeader = "api-key: " + API_KEY;
 
-    cout << "Key=[" << API_KEY << "]"<<endl;
-    cout<< "LEN=" << API_KEY.length() <<endl;
-
     headers = curl_slist_append(
         headers,
         apiHeader.c_str()
@@ -91,13 +89,16 @@ bool sendEmail(const string& recipient,const string& otp)
     );
 
     stringstream payload;
+    string sender = getEnvValue("Email");
+
+    cout << sender <<endl;
 
     payload
     <<"{"
     <<"\"sender\":{"
     <<"\"name\":\"Prakhar\","
     <<
-    "\"email\":\"example@gmail.com\""
+    "\"email\":\"sender\""
     << "},"
     
     << "\"to\":[{"
@@ -112,6 +113,8 @@ bool sendEmail(const string& recipient,const string& otp)
 
     <<"}";
 
+    cout << payload << endl;
+
     string jsonData = payload.str();
 
     curl_easy_setopt(
@@ -119,8 +122,6 @@ bool sendEmail(const string& recipient,const string& otp)
         CURLOPT_POSTFIELDS,
         jsonData.c_str()
     );
-
-    cout<<"jsonData:"<<jsonData<<endl;
 
     curl_easy_setopt(
         curl,
@@ -141,7 +142,6 @@ bool sendEmail(const string& recipient,const string& otp)
     );
 
     CURLcode res = curl_easy_perform(curl);
-    cout<<responseBody<<endl;
 
     long response_code = 0;
 
@@ -150,8 +150,6 @@ bool sendEmail(const string& recipient,const string& otp)
         CURLINFO_RESPONSE_CODE,
         &response_code
     );
-
-    cout<<"HTTP Code : "<< response_code <<endl;
 
     if(res != CURLE_OK)
     {

@@ -1,8 +1,8 @@
-#include "../Headers/routes.h"
-#include "../Headers/login.h"
-#include "../Headers/database.h"
-#include "../Headers/signup.h"
-#include "../Headers/otp.h"
+#include "routes.h"
+#include "login.h"
+#include "database.h"
+#include "signup.h"
+#include "otp.h"
 #include "crow.h"
 
 using namespace std;
@@ -89,9 +89,6 @@ void registerRoutes(crow::SimpleApp& app)
            otpStore[email] = data;
 
            sendEmail(email,otp);
-           
-           cout<<"EMAIL"<<" :"<< email <<endl;
-           cout<<"OTP"<<" :"<< otp << endl;
 
            return crow::response(200);
      });

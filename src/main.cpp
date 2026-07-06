@@ -1,9 +1,8 @@
 #include "crow.h"
-#include "../Headers/routes.h"
-#include "../Headers/database.h"
-#include <iostream>
-#include "../Headers/env_config.h"
-#include "../Headers/crypto_utils.h"
+#include "routes.h"
+#include "database.h"
+#include "env_config.h"
+#include "crypto_utils.h"
 
 using namespace std;
 

@@ -1,5 +1,5 @@
-#include "../Headers/database.h"
-#include "../Headers/env_config.h"
+#include "database.h"
+#include "env_config.h"
 #include <cstdlib>
 #include <iostream>
 
@@ -19,7 +19,7 @@ void init_database()
     
     if(!uri)
     {
-        std::cerr << "URI Error: "<<error.message <<std::endl;
+        cerr << "URI Error: "<<error.message <<endl;
         return ;
     }
     

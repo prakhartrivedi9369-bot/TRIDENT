@@ -19,7 +19,7 @@ include_directories("C:/msys64/ucrt64/include")
 # 2. Existing Crow & Boost Dependencies(NO find_package for Boost)
 #-------------------------------------------------------------------------------------- 
 # Crow repository ko as a sub-project add karein
-add_subdirectory(crow)
+add_subdirectory(External/crow)
 
 # Apne main executable ko define karein
 add_executable(my_app 
@@ -33,6 +33,12 @@ add_executable(my_app
                src/crypto_utils.cpp
                Database_check/login_auth.cpp 
                Database_check/signup_auth.cpp)
+
+target_include_directories(my_app PRIVATE
+            ${CMAKE_SOURCE_DIR}/Headers
+            ${CMAKE_SOURCE_DIR}/External/Crow/include
+            ${CMAKE_SOURCE_DIR}/External/jwt-cpp/include/jwt-cpp
+)
 
 #----------------------------------------------------------------------------------------
 # 3. Linking Libraries (Crow, Boost, Windows Networking, & MongoDB C Driver)

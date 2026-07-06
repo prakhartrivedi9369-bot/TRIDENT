@@ -1,9 +1,8 @@
-#include "../Headers/database.h"
-#include "../Headers/crypto_utils.h"
+#include "database.h"
+#include "crypto_utils.h"
 #include <mongoc/mongoc.h>
 #include <bson/bson.h>
 #include <string>
-#include <iostream>
 
 using namespace std;
 

@@ -1,7 +1,6 @@
-#include "../Headers/signup.h"
+#include "signup.h"
 #include "crow.h"
 #include <string>
-#include <iostream>
 
 using namespace std;
 

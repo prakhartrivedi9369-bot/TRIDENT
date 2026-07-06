@@ -1,5 +1,5 @@
-#include "../Headers/database.h"
-#include "../Headers/crypto_utils.h"
+#include "database.h"
+#include "crypto_utils.h"
 #include <bson/bson.h>
 #include <mongoc/mongoc.h>
 #include <string>
