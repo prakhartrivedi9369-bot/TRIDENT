@@ -45,6 +45,7 @@ bool verifyOTP(const string& email,const string& enteredOtp)
     }
 
     otpStore.erase(email);
+    
     return true;
 }
 bool sendEmail(const string& recipient,const string& otp)
@@ -91,14 +92,12 @@ bool sendEmail(const string& recipient,const string& otp)
     stringstream payload;
     string sender = getEnvValue("Email");
 
-    cout << sender <<endl;
-
     payload
     <<"{"
     <<"\"sender\":{"
     <<"\"name\":\"Prakhar\","
     <<
-    "\"email\":\"sender\""
+    "\"email\":\"" + sender + "\""
     << "},"
     
     << "\"to\":[{"
@@ -112,8 +111,6 @@ bool sendEmail(const string& recipient,const string& otp)
     <<"<h2>\""
 
     <<"}";
-
-    cout << payload << endl;
 
     string jsonData = payload.str();
 

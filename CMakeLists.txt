@@ -32,7 +32,8 @@ add_executable(my_app
                src/env_config.cpp
                src/crypto_utils.cpp
                Database_check/login_auth.cpp 
-               Database_check/signup_auth.cpp)
+               Database_check/signup_auth.cpp
+               )
 
 target_include_directories(my_app PRIVATE
             ${CMAKE_SOURCE_DIR}/Headers
