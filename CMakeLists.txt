@@ -7,6 +7,10 @@ set(CMAKE_CXX_STANDARD 17)
 add_compile_definitions(ASIO_STANDALONE)
 add_compile_definitions(CROW_ENABLE_SSL=OFF)
 
+find_package(PkgConfig REQUIRED)
+
+pkg_check_modules(REDIS REQUIRED redis++)
+
 #---------------------------------------------------------------------------------------
 # 1. Executable and includes(Headers ka raasta)
 #---------------------------------------------------------------------------------------
@@ -33,12 +37,15 @@ add_executable(my_app
                src/crypto_utils.cpp
                Database_check/login_auth.cpp 
                Database_check/signup_auth.cpp
+               src/JWT_token.cpp
                )
 
 target_include_directories(my_app PRIVATE
             ${CMAKE_SOURCE_DIR}/Headers
             ${CMAKE_SOURCE_DIR}/External/Crow/include
             ${CMAKE_SOURCE_DIR}/External/jwt-cpp/include/jwt-cpp
+            ${CMAKE_SOURCE_DIR}/External/jwt-cpp/include
+            ${REDIS_LIBRARY_DIRS}
 )
 
 #----------------------------------------------------------------------------------------
@@ -49,6 +56,8 @@ target_link_libraries(my_app PRIVATE
     "C:/msys64/ucrt64/lib/libsodium.a"
     "C:/msys64/ucrt64/lib/libmongoc2.a"
     "C:/msys64/ucrt64/lib/libbson2.a"
+    ${REDIS_LIBRARY_DIRS}
+    ${REDIS_LIBRARIES}
     ssl
     crypto
     dnsapi
