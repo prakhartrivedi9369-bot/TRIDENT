@@ -2,9 +2,8 @@
 build/
 
 #Github_repos
-crow/
-CrowCppCrow library(framework)/
-jwt-cpp/   
+Backend/External/Crow/
+Backend/External/jwt-cpp/
 
 
 #VS code

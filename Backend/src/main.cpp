@@ -6,8 +6,6 @@
 
 using namespace std;
 
-void handlelogin(const crow::request& req, crow::response& res);
-
 int main()
 {
      loadEnv("../.env");
