@@ -5,6 +5,7 @@
 #include <sstream>
 #include <string>
 #include <iostream>
+#include "Redis.h"
 
 using namespace std;
 
@@ -20,7 +21,7 @@ static size_t WriteCallback(
     );
     return size * nmemb;
 }
-unordered_map<string, OTPData> otpStore;
+
 string generateOTP()
 {
     random_device rd;
@@ -30,26 +31,36 @@ string generateOTP()
     return to_string(dist(gen));
 }
 
-bool verifyOTP(const string& email,const string& enteredOtp)
+string verifyOTP(const string& email,const string& enteredOtp)
 {
-    auto it = otpStore.find(email);
-
-    if(it == otpStore.end()) 
+    try
     {
-        return false;
+        string key = "otp:" + email;
+        auto value = redis.get(key);
+        if(!value) 
+        {
+           return EXPIRED;
+        }
+        if(value!=enteredOtp)
+        {
+           return WRONG_OTP;
+        }
+        if(value==enteredOtp)
+        {
+           redis.del(key);
+           return VERIFIED;
+        }
     }
-
-    if(it->second.otp != enteredOtp)
+    catch(const sw::redis::Error &e)
     {
-        return false;
+        return REDIS_ERROR;
     }
-
-    otpStore.erase(email);
-    
-    return true;
 }
 bool sendEmail(const string& recipient,const string& otp)
 {
+    string key = "otp:" + recipient;
+    redis.setex(key,120,otp);
+
     string API_KEY = getEnvValue("Brevo_REST_API");
 
     CURL* curl = curl_easy_init();

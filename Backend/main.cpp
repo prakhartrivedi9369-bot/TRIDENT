@@ -3,8 +3,11 @@
 #include "database.h"
 #include "env_config.h"
 #include "crypto_utils.h"
+#include "Redis.h"
 
 using namespace std;
+
+void Redis();
 
 int main()
 {

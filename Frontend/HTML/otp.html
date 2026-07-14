@@ -426,17 +426,33 @@ form.addEventListener("submit",async(e)=>{
 
   const correctOTP = await response.json();
 
-  if(correctOTP.success){
+  alert(correctOTP.message);
 
-    alert("OTP Verified");
-
+  if(correctOTP.success)
+  {
     // Redirect Example
     // window.location.href = "/dashboard";
 
     verifyBtn.disabled = false;
 
-  }else{
+  }
+  else
+  {
+    switch(correctOTP.code)
+    {
+      case "WRONG_OTP":
+          //OTP input ko highlight karo
+          break;
 
+      case "OTP_VERIFIED":
+          //Resend OTP button enable karo
+          break;
+      
+      case "REDIS_ERROR":
+           //Generic error
+           break;
+
+    }
     attempts++;
 
     inputs.forEach(input=>{
@@ -454,9 +470,6 @@ form.addEventListener("submit",async(e)=>{
 
       attempts = 0;
 
-    }else{
-
-      showStatus("Invalid verification code.","error");
     }
 
     verifyBtn.disabled = false;

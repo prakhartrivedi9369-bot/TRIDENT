@@ -2,7 +2,8 @@
 #include "otp.h"
 #include "crow.h"
 #include "Paths.h"
-#include "database.h"
+#include <string>
+#include<iostream>
 
 using namespace std;
 
@@ -26,12 +27,6 @@ void register_Otp_Routes(crow::SimpleApp& app)
            string email = body["email"].s();
            string otp = generateOTP();
 
-           OTPData data;
-           data.otp = otp;
-           data.createdAt = time(nullptr);
-
-           otpStore[email] = data;
-
            cout<<otp<<endl;
 
            sendEmail(email,otp);
@@ -45,13 +40,38 @@ void register_Otp_Routes(crow::SimpleApp& app)
        string email = body["email"].s();
        string otp = body["otp"].s();
 
-       bool result = verifyOTP(email, otp);
+       string result = verifyOTP(email, otp);
 
        crow::json::wvalue response;
 
-       response["success"]= result;
+            if(result=="OTP_VERIFIED")
+            {
+                response["success"] = true;
+                response["code"] = "OTP_VERIFIED";
+                response["message"] = "OTP verified successfully";
+            }
 
-       return crow::response(response);
-     });
+            if(result=="WRONG_OTP")
+            {
+                response["success"] = false;
+                response["code"] = "WRONG_OTP";
+                response["message"] = "Wrong OTP, Try again!";
+            }
+            
+            if(result == "OTP_EXPIRED")
+            {
+                response["success"] = false;
+                response["code"] = "OTP_EXPIRED";
+                response["message"] = "OTP Expired, Try again!";
+            }
+
+            if(result == "REDIS_ERROR")
+            {
+                response["success"] = false;
+                response["code"] = "REDIS_ERROR";
+                response["message"] = "Server Error!";
+            }
+    return crow::response(response);
+    });
 }
 

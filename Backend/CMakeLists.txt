@@ -11,8 +11,6 @@ add_compile_definitions(CROW_ENABLE_SSL=OFF)
 # 1. Executable and includes(Headers ka raasta)
 #---------------------------------------------------------------------------------------
   include_directories(Crow/include)
-# include_directories("C:/msys64/mingw64/include")
-# include_directories("C:/msys64/ucrt64/include")
 # Note-- Use paths according to your local system.
 
 #--------------------------------------------------------------------------------------
@@ -23,11 +21,11 @@ add_subdirectory(External/Crow)
 
 # Apne main executable ko define karein
 add_executable(my_app 
-               src/main.cpp 
-               src/login.cpp 
+               main.cpp 
+               src/login.cpp
                src/database.cpp 
                src/signup.cpp 
-               src/otp.cpp
+# src/otp.cpp
                src/env_config.cpp
                src/crypto_utils.cpp
                Database_check/login_auth.cpp 
@@ -36,8 +34,9 @@ add_executable(my_app
                Routes/Public/Home_Route.cpp
                Routes/Public/Login_Route.cpp
                Routes/Public/Signup_Route.cpp
-               Routes/Public/OTP_Route.cpp
+# Routes/Public/OTP_Route.cpp
                src/Routes_Manager.cpp
+               src/Redis.cpp
                )
 
 target_include_directories(my_app PRIVATE
@@ -45,6 +44,7 @@ target_include_directories(my_app PRIVATE
             ${CMAKE_SOURCE_DIR}/External/Crow/include
             ${CMAKE_SOURCE_DIR}/External/jwt-cpp/include/jwt-cpp
             ${CMAKE_SOURCE_DIR}/External/jwt-cpp/include
+            /usr/include
             /usr/include/mongoc-2.3.0
             /usr/include/bson-2.3.0
 )
@@ -68,4 +68,6 @@ target_link_libraries(my_app PRIVATE
     snappy
     zstd
     curl
+    redis++
+    hiredis
 )

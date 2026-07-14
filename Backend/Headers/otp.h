@@ -7,24 +7,15 @@
 
 using namespace std;
 
-struct OTPData
-{
-    string otp;
-    time_t createdAt;
-};
-
-extern unordered_map<string,OTPData> otpStore;
-
 string generateOTP();
 
-bool verifyOTP
+string verifyOTP
 (
-     const string& email,
-     const string& enteredOtp
+    const string& email,
+    const string& enteredOtp
 );
 
-bool storeOTP(const string& email,const string& otp);
-bool verifyOTP(const string& email,const string& otp);
+// bool storeOTP(const string& email,const string& otp);
 
 bool sendEmail(
     const string&  recipient,
