@@ -33,33 +33,11 @@ string generateOTP()
 
 string verifyOTP(const string& email,const string& enteredOtp)
 {
-    try
-    {
-        string key = "otp:" + email;
-        auto value = redis.get(key);
-        if(!value) 
-        {
-           return EXPIRED;
-        }
-        if(value!=enteredOtp)
-        {
-           return WRONG_OTP;
-        }
-        if(value==enteredOtp)
-        {
-           redis.del(key);
-           return VERIFIED;
-        }
-    }
-    catch(const sw::redis::Error &e)
-    {
-        return REDIS_ERROR;
-    }
+    return RedisManager::verifyOTP(email,enteredOtp);
 }
 bool sendEmail(const string& recipient,const string& otp)
 {
-    string key = "otp:" + recipient;
-    redis.setex(key,120,otp);
+    RedisManager::storeOtp(recipient,otp,120);
 
     string API_KEY = getEnvValue("Brevo_REST_API");
 

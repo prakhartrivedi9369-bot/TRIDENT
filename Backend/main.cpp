@@ -13,12 +13,10 @@ int main()
 {
      loadEnv("../.env");
 
-     if(!CryptoUtils::init())
-     {
-          cerr << "Failed to initialize libsodium\n";
-     }
+     RedisManager redisManager(getEnvValue("REDIS_URI"));
 
-     //Server chalane se phele databse connect karos
+     CryptoUtils::init();
+
      init_database();  
 
      crow::SimpleApp app;

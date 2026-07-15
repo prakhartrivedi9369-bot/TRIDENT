@@ -27,7 +27,6 @@ class RedisManager
           bool storeOtp(
             const string &email,
             const string &otp,
-            const string &reason,
             int ttl
           );
 

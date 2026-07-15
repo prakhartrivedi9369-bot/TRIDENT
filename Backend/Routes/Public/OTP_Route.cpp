@@ -3,7 +3,7 @@
 #include "crow.h"
 #include "Paths.h"
 #include <string>
-#include<iostream>
+#include <iostream>
 
 using namespace std;
 
@@ -26,6 +26,8 @@ void register_Otp_Routes(crow::SimpleApp& app)
 
            string email = body["email"].s();
            string otp = generateOTP();
+
+           cout<<"fuck"<<endl;
 
            cout<<otp<<endl;
 
