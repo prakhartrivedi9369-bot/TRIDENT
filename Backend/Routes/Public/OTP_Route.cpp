@@ -4,10 +4,11 @@
 #include "Paths.h"
 #include <string>
 #include <iostream>
+#include "Redis.h"
 
 using namespace std;
 
-void register_Otp_Routes(crow::SimpleApp& app)
+void register_Otp_Routes(crow::SimpleApp& app,RedisManager& RedisManager)
 {
      CROW_ROUTE(app, "/otp")([]()
      {
@@ -20,29 +21,27 @@ void register_Otp_Routes(crow::SimpleApp& app)
 
            return crow::response (buffer.str());
      });
-     CROW_ROUTE(app, "/send-otp").methods("POST"_method)([](const crow::request& req)
+     CROW_ROUTE(app, "/send-otp").methods("POST"_method)([&RedisManager](const crow::request& req)
      {
            auto body = crow::json::load(req.body);
-
+            
            string email = body["email"].s();
            string otp = generateOTP();
 
-           cout<<"fuck"<<endl;
-
            cout<<otp<<endl;
 
-           sendEmail(email,otp);
+           sendEmail(email,otp,RedisManager);
 
            return crow::response(200);
      });
-     CROW_ROUTE(app, "/verify-otp").methods("POST"_method)([](const crow::request& req)
+     CROW_ROUTE(app, "/verify-otp").methods("POST"_method)([&RedisManager](const crow::request& req)
      {
        auto body = crow::json::load(req.body);
 
        string email = body["email"].s();
        string otp = body["otp"].s();
 
-       string result = verifyOTP(email, otp);
+       string result = verifyOTP(email, otp, RedisManager);
 
        crow::json::wvalue response;
 
@@ -53,21 +52,21 @@ void register_Otp_Routes(crow::SimpleApp& app)
                 response["message"] = "OTP verified successfully";
             }
 
-            if(result=="WRONG_OTP")
+            else if(result=="WRONG_OTP")
             {
                 response["success"] = false;
                 response["code"] = "WRONG_OTP";
                 response["message"] = "Wrong OTP, Try again!";
             }
             
-            if(result == "OTP_EXPIRED")
+            else if(result == "OTP_EXPIRED")
             {
                 response["success"] = false;
                 response["code"] = "OTP_EXPIRED";
                 response["message"] = "OTP Expired, Try again!";
             }
-
-            if(result == "REDIS_ERROR")
+             //(result == "REDIS_ERROR")
+            else 
             {
                 response["success"] = false;
                 response["code"] = "REDIS_ERROR";

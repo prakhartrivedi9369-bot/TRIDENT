@@ -22,15 +22,13 @@ class RedisManager
      public:
           RedisManager(const string &redisUri);
 
-          bool connect();
-
           bool storeOtp(
             const string &email,
             const string &otp,
             int ttl
           );
 
-          OTPstatus verifyOTP(
+          OTPstatus verifyOtp(
             const string &email,
             const string &enteredOTP
           );

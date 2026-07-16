@@ -1,9 +1,9 @@
 #pragma once
 
 #include <string>
-#include <unordered_map>
 #include <ctime>
 #include "crow.h"
+#include "Redis.h"
 
 using namespace std;
 
@@ -12,12 +12,14 @@ string generateOTP();
 string verifyOTP
 (
     const string& email,
-    const string& enteredOtp
+    const string& enteredOtp,
+    RedisManager& RedisManager
 );
 
 // bool storeOTP(const string& email,const string& otp);
 
 bool sendEmail(
     const string&  recipient,
-    const string& otp
+    const string& otp,
+    RedisManager& RedisManager
 );

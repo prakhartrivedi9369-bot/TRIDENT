@@ -16,6 +16,7 @@ RedisManager::RedisManager(const string &redisUri) : redis(redisUri)
     catch(const sw::redis::Error &e)
     {
         cerr << "Redis Connection Error: " << e.what() << endl;
+        throw;  //object banne hi nahi dega agar Redis unavailable hai.
     }
 }
 
@@ -30,7 +31,7 @@ bool RedisManager::storeOtp(const string &email, const string &otp, int ttl)
 
         //TTL set ke saath store karein
         redis.set(key,otp,chrono::seconds(ttl));
-        return false;
+        return true;
     }
     catch(const sw::redis::Error &e)
     {
@@ -40,7 +41,7 @@ bool RedisManager::storeOtp(const string &email, const string &otp, int ttl)
 }
 
 // 2. Verify OTP Logic
-OTPstatus RedisManager::verifyOTP(const string &email, const string &user_otp)
+OTPstatus RedisManager::verifyOtp(const string &email, const string &user_otp)
 {
     try
     {

@@ -7,13 +7,11 @@
 
 using namespace std;
 
-void Redis();
-
 int main()
 {
      loadEnv("../.env");
 
-     RedisManager redisManager(getEnvValue("REDIS_URI"));
+     RedisManager RedisManager(getEnvValue("REDIS_URI"));
 
      CryptoUtils::init();
 
@@ -21,7 +19,7 @@ int main()
 
      crow::SimpleApp app;
 
-     registerRoutes(app);
+     registerRoutes(app,RedisManager);
      
      //Server start
      app.port(18080).multithreaded().run();

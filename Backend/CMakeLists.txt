@@ -25,7 +25,7 @@ add_executable(my_app
                src/login.cpp
                src/database.cpp 
                src/signup.cpp 
-# src/otp.cpp
+               src/otp.cpp
                src/env_config.cpp
                src/crypto_utils.cpp
                Database_check/login_auth.cpp 
@@ -34,7 +34,7 @@ add_executable(my_app
                Routes/Public/Home_Route.cpp
                Routes/Public/Login_Route.cpp
                Routes/Public/Signup_Route.cpp
-# Routes/Public/OTP_Route.cpp
+               Routes/Public/OTP_Route.cpp
                src/Routes_Manager.cpp
                src/Redis.cpp
                )

@@ -428,31 +428,27 @@ form.addEventListener("submit",async(e)=>{
 
   alert(correctOTP.message);
 
-  if(correctOTP.success)
-  {
-    // Redirect Example
-    // window.location.href = "/dashboard";
-
-    verifyBtn.disabled = false;
-
-  }
-  else
-  {
-    switch(correctOTP.code)
+    if(correctOTP.success)
     {
-      case "WRONG_OTP":
-          //OTP input ko highlight karo
-          break;
-
-      case "OTP_VERIFIED":
-          //Resend OTP button enable karo
-          break;
-      
-      case "REDIS_ERROR":
-           //Generic error
-           break;
-
+    // Redirect Example
+   // window.location.href = "/";
+    alert("Success");
+    verifyBtn.disabled = false;
     }
+    else
+    {
+      if(correctOTP.code=="WRONG_OTP")
+          //OTP input ko highlight karo
+          alert("Wrong OTP");
+
+      if(correctOTP.code=="OTP_EXPIRED")
+          //Resend OTP button enable karo
+          alert("OTP expired");
+      
+      if(correctOTP.code=="REDIS_ERROR")
+           //Generic error
+           alert("Internal error");
+
     attempts++;
 
     inputs.forEach(input=>{

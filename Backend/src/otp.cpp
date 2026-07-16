@@ -31,13 +31,34 @@ string generateOTP()
     return to_string(dist(gen));
 }
 
-string verifyOTP(const string& email,const string& enteredOtp)
+string verifyOTP(const string& email,const string& enteredOtp, RedisManager& RedisManager)
 {
-    return RedisManager::verifyOTP(email,enteredOtp);
+    OTPstatus status = RedisManager.verifyOtp(email,enteredOtp);
+    switch(status)
+    {
+        case OTPstatus::OTP_VERIFIED:
+            return "VERIFIED";
+
+        case OTPstatus::WRONG_OTP:
+            return "WRONG_OTP";
+
+        case OTPstatus::EXPIRED:
+            return "EXPIRIED";
+
+        case OTPstatus::REDIS_ERROR:
+            return "REDIS_ERROR";
+    }
+    return "Prakhar";
 }
-bool sendEmail(const string& recipient,const string& otp)
+bool sendEmail(const string& recipient,const string& otp, RedisManager& RedisManager)
 {
-    RedisManager::storeOtp(recipient,otp,120);
+    if(RedisManager.storeOtp(recipient,otp,120))
+    {
+        cout<<"OTP stored in Redis successFully! " << endl;
+    }
+    else{
+        cout << "OTP store in Redis failed " << endl;
+    }
 
     string API_KEY = getEnvValue("Brevo_REST_API");
 
