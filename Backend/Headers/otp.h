@@ -9,7 +9,7 @@ using namespace std;
 
 string generateOTP();
 
-string verifyOTP
+OTPstatus verifyOTP
 (
     const string& email,
     const string& enteredOtp,

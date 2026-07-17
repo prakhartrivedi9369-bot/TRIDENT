@@ -31,28 +31,26 @@ string generateOTP()
     return to_string(dist(gen));
 }
 
-string verifyOTP(const string& email,const string& enteredOtp, RedisManager& RedisManager)
+OTPstatus verifyOTP(const string& email,const string& enteredOtp, RedisManager& RedisManager)
 {
     OTPstatus status = RedisManager.verifyOtp(email,enteredOtp);
-    switch(status)
+    if(status==OTPstatus::OTP_VERIFIED)
     {
-        case OTPstatus::OTP_VERIFIED:
-            return "VERIFIED";
-
-        case OTPstatus::WRONG_OTP:
-            return "WRONG_OTP";
-
-        case OTPstatus::EXPIRED:
-            return "EXPIRIED";
-
-        case OTPstatus::REDIS_ERROR:
-            return "REDIS_ERROR";
+        return OTPstatus::OTP_VERIFIED;
     }
-    return "Prakhar";
+    if(status==OTPstatus::WRONG_OTP)
+    {
+        return OTPstatus::WRONG_OTP;
+    }
+    if(status==OTPstatus::EXPIRED)
+    {
+        return OTPstatus::EXPIRED;
+    }
+    return OTPstatus::REDIS_ERROR;
 }
 bool sendEmail(const string& recipient,const string& otp, RedisManager& RedisManager)
 {
-    if(RedisManager.storeOtp(recipient,otp,120))
+    if(RedisManager.storeOtp(recipient,otp,30))
     {
         cout<<"OTP stored in Redis successFully! " << endl;
     }

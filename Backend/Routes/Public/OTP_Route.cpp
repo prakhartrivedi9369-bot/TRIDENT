@@ -41,38 +41,36 @@ void register_Otp_Routes(crow::SimpleApp& app,RedisManager& RedisManager)
        string email = body["email"].s();
        string otp = body["otp"].s();
 
-       string result = verifyOTP(email, otp, RedisManager);
+       OTPstatus result = verifyOTP(email, otp, RedisManager);
 
        crow::json::wvalue response;
 
-            if(result=="OTP_VERIFIED")
+            if(result == OTPstatus::OTP_VERIFIED)
             {
                 response["success"] = true;
                 response["code"] = "OTP_VERIFIED";
                 response["message"] = "OTP verified successfully";
             }
-
-            else if(result=="WRONG_OTP")
+            if(result == OTPstatus::WRONG_OTP)
             {
                 response["success"] = false;
                 response["code"] = "WRONG_OTP";
                 response["message"] = "Wrong OTP, Try again!";
             }
             
-            else if(result == "OTP_EXPIRED")
+            if(result == OTPstatus::EXPIRED)
             {
                 response["success"] = false;
                 response["code"] = "OTP_EXPIRED";
                 response["message"] = "OTP Expired, Try again!";
             }
-             //(result == "REDIS_ERROR")
-            else 
+            if(result == OTPstatus::REDIS_ERROR)
             {
                 response["success"] = false;
                 response["code"] = "REDIS_ERROR";
                 response["message"] = "Server Error!";
             }
-    return crow::response(response);
+            return crow::response(response);
     });
 }
 
