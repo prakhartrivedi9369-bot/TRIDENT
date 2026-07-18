@@ -1,6 +1,7 @@
-#include "otp.h"
+// #include "otp.h"
 #include "env_config.h"
 #include <random>
+#include <ctime>
 #include <curl/curl.h>
 #include <sstream>
 #include <string>
@@ -8,6 +9,10 @@
 #include "Redis.h"
 
 using namespace std;
+
+string generateOTP();
+bool sendEmail(const string&  recipient,const string& otp,RedisManager& RedisManager);
+OTPstatus verifyOTP(const string& email,const string& enteredOtp,RedisManager& RedisManager);
 
 static size_t WriteCallback(
     void* contents,

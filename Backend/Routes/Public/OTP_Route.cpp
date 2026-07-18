@@ -1,12 +1,16 @@
 #include "routes.h"
-#include "otp.h"
 #include "crow.h"
 #include "Paths.h"
 #include <string>
+#include <ctime>
 #include <iostream>
 #include "Redis.h"
 
 using namespace std;
+
+string generateOTP();
+bool sendEmail(const string&  recipient,const string& otp,RedisManager& RedisManager);
+OTPstatus verifyOTP(const string& email,const string& enteredOtp,RedisManager& RedisManager);
 
 void register_Otp_Routes(crow::SimpleApp& app,RedisManager& RedisManager)
 {

@@ -1,4 +1,3 @@
-// redis.cpp
 #include <sw/redis++/redis++.h>
 #include <iostream>
 #include "Redis.h"

@@ -1,10 +1,10 @@
-#include "signup.h"
 #include "crow.h"
 #include <string>
+#include "database.h"
 
 using namespace std;
 
-int createUserInDB(const string& username, const string& email, const string& password);
+void handle_signup(const crow::request& req,crow::response& res);
 
 void handle_signup(const crow::request& req, crow::response& res)
 {

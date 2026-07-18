@@ -1,11 +1,10 @@
-#include "login.h"
 #include "crow.h"
+#include "database.h"
 #include <string>
 
 using namespace std;
 
-//auth.cpp wale function ka dclaration (agar header file nahi banayi toh)
-int verifyCredentialsInDB(const string& email, const string& password);
+void handleLogin(const crow::request& req,crow::response& res);
 
 void handleLogin(const crow::request& req, crow::response& res)
 {

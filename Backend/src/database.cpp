@@ -1,7 +1,6 @@
 #include "database.h"
 #include "env_config.h"
 #include <cstdlib>
-#include <iostream>
 
 using namespace std;
 

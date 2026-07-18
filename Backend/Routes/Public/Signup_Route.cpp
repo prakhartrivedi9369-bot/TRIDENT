@@ -1,10 +1,11 @@
 #include "routes.h"
-#include "signup.h"
 #include "crow.h"
 #include "Paths.h"
 #include "database.h"
 
 using namespace std;
+
+void handle_signup(const crow::request& req,crow::response& res);
 
 void register_Signup_Routes(crow::SimpleApp& app)
 {
