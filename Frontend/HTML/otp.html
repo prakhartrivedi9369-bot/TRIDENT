@@ -316,234 +316,228 @@ let hidden = false;
 let attempts = 0;
 
 /* AUTO FOCUS */
-inputs.forEach((input,index)=>{
+inputs.forEach((input, index) => {
 
-  input.addEventListener("input",(e)=>{
+  input.addEventListener("input", (e) => {
+    input.value = input.value.replace(/\D/g, "");
 
-    input.value = input.value.replace(/\D/g,"");
-
-    if(input.value && index < inputs.length-1){
-      inputs[index+1].focus();
+    if (input.value && index < inputs.length - 1) {
+      inputs[index + 1].focus();
     }
 
     input.classList.remove("error");
     clearStatus();
   });
 
-  input.addEventListener("keydown",(e)=>{
-
-    if(e.key === "Backspace" && !input.value && index > 0){
-      inputs[index-1].focus();
+  input.addEventListener("keydown", (e) => {
+    if (e.key === "Backspace" && !input.value && index > 0) {
+      inputs[index - 1].focus();
     }
 
-    if(e.key === "ArrowLeft" && index > 0){
-      inputs[index-1].focus();
+    if (e.key === "ArrowLeft" && index > 0) {
+      inputs[index - 1].focus();
     }
 
-    if(e.key === "ArrowRight" && index < inputs.length-1){
-      inputs[index+1].focus();
+    if (e.key === "ArrowRight" && index < inputs.length - 1) {
+      inputs[index + 1].focus();
     }
   });
 
   /* PASTE SUPPORT */
-  input.addEventListener("paste",(e)=>{
-
+  input.addEventListener("paste", (e) => {
     e.preventDefault();
 
     const pasted = (e.clipboardData || window.clipboardData)
       .getData("text")
-      .replace(/\D/g,"")
-      .slice(0,6);
+      .replace(/\D/g, "")
+      .slice(0, 6);
 
-    pasted.split("").forEach((digit,i)=>{
-      if(inputs[i]){
+    pasted.split("").forEach((digit, i) => {
+      if (inputs[i]) {
         inputs[i].value = digit;
       }
     });
 
-    if(pasted.length < inputs.length){
+    if (pasted.length < inputs.length) {
       inputs[pasted.length].focus();
-    }else{
-      inputs[inputs.length-1].focus();
+    } else {
+      inputs[inputs.length - 1].focus();
     }
   });
 
 });
 
 /* TOGGLE HIDE/SHOW */
-toggleBtn.addEventListener("click",()=>{
-
+toggleBtn.addEventListener("click", () => {
   hidden = !hidden;
 
-  inputs.forEach(input=>{
+  inputs.forEach(input => {
     input.type = hidden ? "password" : "text";
   });
 
-  toggleBtn.textContent = hidden
-    ? "Show Digits"
-    : "Hide Digits";
+  toggleBtn.textContent = hidden ? "Show Digits" : "Hide Digits";
 });
 
 /* FORM SUBMIT */
-form.addEventListener("submit",async(e)=>{
-
+form.addEventListener("submit", async (e) => {
   e.preventDefault();
 
-  const code = [...inputs].map(i=>i.value).join("");
-
+  const code = [...inputs].map(i => i.value).join("");
   const email = localStorage.getItem("userEmail");
 
-  if(code.length !== 6){
+  if (code.length !== 6) {
+    showStatus("Please enter all 6 digits.", "error");
 
-    showStatus("Please enter all 6 digits.","error");
-
-    inputs.forEach(input=>{
-      if(!input.value){
+    inputs.forEach(input => {
+      if (!input.value) {
         input.classList.add("error");
       }
     });
-
     return;
   }
 
   verifyBtn.disabled = true;
-
-  showStatus("Verifying code...","loading");
+  showStatus("Verifying code...", "loading");
 
   await wait(1500);
-  
-  // OTP logic
-  const response = await fetch('/verify-otp',{
-    method:'POST',
-    headers:{
-        'Content-Type':'application/json'
-    },
-    body: JSON.stringify({
-         email: email,
-         otp: code
-    })
-  });
 
-  const correctOTP = await response.json();
-
-  alert(correctOTP.message);
-
-    if(correctOTP.success)
-    {
-    // Redirect Example
-   // window.location.href = "/";
-    alert("Success");
-    verifyBtn.disabled = false;
-    }
-    else
-    {
-      if(correctOTP.code=="WRONG_OTP")
-          //OTP input ko highlight karo
-          alert("Wrong OTP");
-
-      if(correctOTP.code=="OTP_EXPIRED")
-          //Resend OTP button enable karo
-          alert("OTP expired");
-      
-      if(correctOTP.code=="REDIS_ERROR")
-           //Generic error
-           alert("Internal error");
-
-    attempts++;
-
-    inputs.forEach(input=>{
-      input.classList.add("error");
+  try {
+    const response = await fetch('/verify-otp', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        email: email,
+        otp: code
+      })
     });
 
-    if(attempts >= 3){
+    const correctOTP = await response.json();
+    alert(correctOTP.message);
 
-      showStatus(
-        "Too many failed attempts. Please wait 30 seconds.",
-        "error"
-      );
+    if (correctOTP.success) {
+      alert("Success");
+      verifyBtn.disabled = false;
+      // window.location.href = "/";
+    } else {
+      if (correctOTP.code == "WRONG_OTP") {
+        alert("Wrong OTP");
+      }
 
-      startCooldown(30);
+      if (correctOTP.code == "OTP_EXPIRED") {
+        alert("OTP expired");
+        // Jab OTP Expire ka notification aaye, tabhi resend button active hoga
+        resendBtn.disabled = false;
+        resendBtn.textContent = "Resend Code";
+      }
 
-      attempts = 0;
+      if (correctOTP.code == "REDIS_ERROR") {
+        alert("Internal error");
+      }
 
+      attempts++;
+
+      inputs.forEach(input => {
+        input.classList.add("error");
+      });
+
+      if (attempts >= 3) {
+        showStatus("Too many failed attempts. Please wait 60 seconds.", "error");
+        startCooldown(60); // Failed attempts cooldown bhi 60s kar diya
+        attempts = 0;
+      }
+
+      verifyBtn.disabled = false;
     }
-
+  } catch (err) {
+    console.error(err);
+    showStatus("Something went wrong.", "error");
     verifyBtn.disabled = false;
   }
-
 });
 
 /* STATUS */
-function showStatus(message,type){
-
+function showStatus(message, type) {
   statusEl.className = "status";
-
-  if(type){
+  if (type) {
     statusEl.classList.add(type);
   }
-
   statusEl.textContent = message;
 }
 
-function clearStatus(){
+function clearStatus() {
   statusEl.textContent = "";
   statusEl.className = "status";
 }
 
 /* WAIT */
-function wait(ms){
-  return new Promise(resolve=>setTimeout(resolve,ms));
+function wait(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 /* RESEND COOLDOWN */
-function startCooldown(seconds){
-
+function startCooldown(seconds) {
   let remaining = seconds;
 
   resendBtn.disabled = true;
   resendBtn.textContent = `Resend Code (${remaining}s)`;
 
-  const timer = setInterval(()=>{
-
+  const timer = setInterval(() => {
     remaining--;
+    resendBtn.textContent = `Resend Code (${remaining}s)`;
 
-    resendBtn.textContent =
-      `Resend Code (${remaining}s)`;
-
-    if(remaining <= 0){
-
+    if (remaining <= 0) {
       clearInterval(timer);
-
       resendBtn.disabled = false;
       resendBtn.textContent = "Resend Code";
     }
-
-  },1000);
+  }, 1000);
 }
 
-startCooldown(30);
+// Pehli baar page load hone par 60 seconds ka timer chalega
+startCooldown(60);
 
-/* RESEND */
-resendBtn.addEventListener("click",async()=>{
+/* RESEND BUTTON CLICK EVENT WITH ROUTE CALL */
+resendBtn.addEventListener("click", async () => {
+  const email = localStorage.getItem("userEmail");
 
-  startCooldown(30);
+  // Click hote hi button disabled aur timer start (60 seconds ke liye)
+  startCooldown(60);
 
-  inputs.forEach(input=>{
+  inputs.forEach(input => {
     input.value = "";
     input.classList.remove("error");
   });
-
   inputs[0].focus();
 
-  showStatus("Sending new verification code...","loading");
+  showStatus("Sending new verification code...", "loading");
 
-  await wait(1200);
+  try {
+    // API Route Call: /send-otp
+    const response = await fetch('/send-otp', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ email: email })
+    });
 
-  showStatus("New verification code sent.","success");
+    const result = await response.json();
+
+    if (response.ok) {
+      showStatus("New verification code sent.", "success");
+    } else {
+      showStatus(result.message || "Failed to send OTP.", "error");
+    }
+  } catch (error) {
+    console.error(error);
+    showStatus("Error connecting to server.", "error");
+  }
 });
 
 /* INITIAL FOCUS */
-window.addEventListener("load",()=>{
+window.addEventListener("load", () => {
   inputs[0].focus();
 });
 </script>

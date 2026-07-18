@@ -50,7 +50,7 @@ OTPstatus verifyOTP(const string& email,const string& enteredOtp, RedisManager& 
 }
 bool sendEmail(const string& recipient,const string& otp, RedisManager& RedisManager)
 {
-    if(RedisManager.storeOtp(recipient,otp,30))
+    if(RedisManager.storeOtp(recipient,otp,60))
     {
         cout<<"OTP stored in Redis successFully! " << endl;
     }
