@@ -4,7 +4,10 @@
 #include <mongoc/mongoc.h>
 #include <string>
 #include <iostream>
+
 using namespace std;
+
+int verifyCredentialsInDB(const string& email, const string& password);
 
 int verifyCredentialsInDB(const string& email, const string& password)
 {

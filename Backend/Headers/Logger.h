@@ -4,9 +4,6 @@
 
 #include "crow.h" // Crow framework include karna zaroori hai
 
-// Ye function handle karega login ki POST request ko
-void handleLogin(const crow::request& req,crow::response& res);
-
 enum class LogEvent
 {
     USER_SIGNUP,
