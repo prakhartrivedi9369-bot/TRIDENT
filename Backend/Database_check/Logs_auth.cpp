@@ -23,9 +23,19 @@ void saveLogInDB(LogEntry event,const string& ip,const string& email)
             status="LOGIN_SUCCESS";
             break;
         }
-        case LogEntry::LOGIN_FAILED:
+        case LogEntry::SIGNUP_SUCCESS:
         {
-            status="LOGIN_FAILED";
+            status="SIGNUP_SUCCESS";
+            break;
+        }
+        case LogEntry::USER_NOT_FOUND:
+        {
+            status="USER_NOT_FOUND";
+            break;
+        }
+        case LogEntry::USER_ALREADY_EXIST:
+        {
+            status="USER_ALREADY_EXIST";
             break;
         }
         case LogEntry::INVALID_PASSWORD:

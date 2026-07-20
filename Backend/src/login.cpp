@@ -12,23 +12,23 @@ void handleLogin(const crow::request& req, crow::response& res)
 {
     //Crow mai response headers ko JSON set kar dete hain
     res.set_header("Content-Type", "application/json");
+
+    // 1. Request body ko JSON mai parse karna
+    auto json_data = crow::json::load(req.body);
+    string email = json_data["email"].s();
+    string IP=req.remote_ip_address;
   
     try
     {
-        // 1. Request body ko JSON mai parse karna
-        auto json_data = crow::json::load(req.body);
-        string email = json_data["email"].s();
-
         if(!json_data || !json_data.has("email") || !json_data.has("password"))
         {
             res.code = 400; //Bad request
             res.body = "{\"error\": \"Email and password required\"}";
-            saveLogInDB(LogEntry::DETAILS_MISSING,req.remote_ip_address,email);
+            saveLogInDB(LogEntry::DETAILS_MISSING,IP,email);
             return;
         }
 
         string password = json_data["password"].s();
-        string IP=req.remote_ip_address;
 
         // 2. auth.cpp ke function ko call lagaya DB check karne ke liye
         int login_status = verifyCredentialsInDB(email, password);
