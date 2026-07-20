@@ -6,7 +6,7 @@
 
 using namespace std;
 
-int createUserInDB(const string& username, const string& email, const string& password);
+// int createUserInDB(const string& username, const string& email, const string& password);
 
 int createUserInDB(const string& username, const string& email, const string& password)
 {

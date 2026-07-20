@@ -30,6 +30,7 @@ add_executable(my_app
                src/crypto_utils.cpp
                Database_check/login_auth.cpp 
                Database_check/signup_auth.cpp
+               Database_check/Logs_auth.cpp
                src/JWT_token.cpp
                Routes/Public/Home_Route.cpp
                Routes/Public/Login_Route.cpp

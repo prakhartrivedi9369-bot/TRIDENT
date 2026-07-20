@@ -4,65 +4,22 @@
 
 #include "crow.h" // Crow framework include karna zaroori hai
 
-enum class LogEvent
+enum class LogEntry
 {
-    USER_SIGNUP,
-    USER_LOGIN,
-    USER_LOGOUT,
+     ATTEMPT,
 
-    OTP_SEND,
-    OTP_VERIFY,
+     DETAILS_MISSING,
 
-    BUY_ORDER,
-    SELL_ORDER,
-    ORDER_CANCEL,
+     LOGIN_SUCCESS,
 
-    PORTFOLIO_VIEW,
+     USER_NOT_FOUND,
 
-    SECURITY,
+     INVALID_PASSWORD,
 
-    DATABASE,
+     DB_CONNECTION_ISSUE,
 
-    SYSTEM
+     SERVER_ERROR
 };
 
-enum class SecurityStatus
-{
-    Allowed,
-
-    INVALID_OTP,
-
-    OTP_EXPIRED,
-
-    EMAIL_BLOCKED,
-
-    IP_BLOCKED,
-
-    ATTEMPT_LIMIT_EXCEEDED,
-
-    TOO_MANY_REQUESTS,
-
-    SUSPICIOUS_ACTIVITY,
-
-    REDIS_ERROR,
-
-    DATABASE_ERROR
-};
-
-enum class LogLevel
-{
-    INFO,
-
-    WARNING,
-
-    ERROR,
-
-    CRITICAL
-};
-
-enum class SecrityAction
-{
-    
-}
 
 #endif

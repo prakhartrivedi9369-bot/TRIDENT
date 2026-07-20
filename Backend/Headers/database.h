@@ -4,6 +4,7 @@
 #include <mongoc/mongoc.h>
 #include "crow.h"
 #include <string>
+#include "Logger.h"
 
 using namespace std;
 
@@ -15,5 +16,6 @@ void init_database();
 void cleanup_database();
 int verifyCredentialsInDB(const string& email, const string& password);
 int createUserInDB(const string& username, const string& email, const string& password);
+void saveLogInDB(LogEntry event,const string& ip,const string& email);
 
 #endif
