@@ -74,6 +74,10 @@ async function handleLogin(event) {
         {
             alert("Invalid Password");
         }
+        else if(result.status === "Attempt_Limit")
+        {
+            alert("Too Many Requests,Please Try Again in 4 minutes!");
+        }
         else if (result.status === "otp_required") 
         {
             submitBtn.style.background = '#00e676';

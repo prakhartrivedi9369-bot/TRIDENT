@@ -36,9 +36,4 @@ class RedisManager
           bool deleteOTP(
             const string &email
           );
-
-          int LOGIN_ATTEMPT(
-            const int &attempt,
-            const string &email 
-          );
 };

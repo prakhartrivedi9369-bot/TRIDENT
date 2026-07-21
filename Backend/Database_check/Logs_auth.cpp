@@ -53,6 +53,11 @@ void saveLogInDB(LogEntry event,const string& ip,const string& email)
             status="SERVER_ERROR";
             break;
         }
+        case LogEntry::ATTEMPT_LIMIT_EXCEED:
+        {
+            status="ATTEMPT_LIMIT_EXCEED";
+            break;
+        }
      }
     mongoc_collection_t *collection = mongoc_client_get_collection(global_db_client,"CPP-database","Logs");
     bson_error_t error;
