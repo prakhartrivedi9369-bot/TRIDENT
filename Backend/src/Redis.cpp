@@ -74,7 +74,7 @@ OTPstatus RedisManager::verifyOtp(const string &email, const string &user_otp)
         return OTPstatus::REDIS_ERROR;
     }
 }
-int Attempt_check(const string& email,const string& IP,const string &password)
+int RedisManager::Attempt_check(const string& email,const string& IP,const string &password)
 {
     //Variable for Keys
     string email_key = "email_key:" + email;
@@ -94,39 +94,93 @@ int Attempt_check(const string& email,const string& IP,const string &password)
     int ip_attempt = stoi(*stored_email_attempt);
 
     //Attempt limit exceed
-    if(email_attempt==3 || ip_attempt==3)
+    if((email_attempt==3 || ip_attempt==3))
     {
-       block_user(email,ip);
-       return false;
+       block_user(email,IP);
     }
 
     return increment_attempt(email,IP,password);
 }
-void increment_attempt(const string &email,const string &IP,const string &password)
+int RedisManager::increment_attempt(const string &email,const string &IP,const string &password)
 {
     int status = verifyCredentialsInDB(email,password);
+
+        //Variable for Keys
+        string email_key = "email_key:" + email;
+        string IP_key = "IP_key:" + IP;
+
+        if(status == 1)
+        {
+           reset_attempt(email,IP);
+           return status;
+        }
+        else if(status ==2)
+        {
+           auto E_attempts = redis.incr(email_key);
+
+           if(E_attempts==1)
+           {
+                redis.expire(email_key,chrono::seconds(300));
+           }
+
+           auto IP_attempts = redis.incr(IP_key);
+
+           if(IP_attempts==1)
+           {
+                redis.expire(IP_key,chrono::seconds(300));
+           }
+           return status;
+        }
+        else
+        {
+            return status;
+        }
+}
+void RedisManager::reset_attempt(const string &email, const string &IP)
+{
     //Variable for Keys
     string email_key = "email_key:" + email;
     string IP_key = "IP_key:" + IP;
 
-    if(status == 1)
+    redis.del(email_key);
+    redis.del(IP_key);
+
+    return;
+}
+bool RedisManager::block_user(const string &email, const string &IP)
+{
+    //Variable for Keys
+    string email_key = "email_key:" + email;
+    string IP_key = "IP_key:" + IP;
+
+    //Value fetched from redis
+    auto stored_email_attempt = redis.get(email_key);
+    auto stored_ip_attempt = redis.get(IP_key);
+
+    int email_int = stoi(*stored_email_attempt);
+    int ip_int = stoi(*stored_ip_attempt);
+
+    if(email_int == 3 || ip_int == 3)
     {
-        
+        try
+        {
+           redis.setex("Blocked_email:" + email,300,"3");
+           redis.setex("Blocked_ip:" + IP,300,"3");
+           return true;
+        }
+        catch(const sw::redis::Error &e)
+        {
+           cerr<<"Blocking of Email/IP failed due to some unexpected error"<<e.what()<<endl;
+           return false;
+        }
     }
-    else if(status == 0 || status ==2)
+    else if(redis.exists("Blocked_email:" + email) || redis.exists("Blocked_ip:" + IP))
     {
-        auto E_attempts = redis.incr(email_key);
-
-        if(E_attempts==1)
-        {
-            redis.expire(email_key,chrono::seconds(300));
-        }
-
-        auto IP_attempts = redis.incr(IP_key);
-
-        if(IP_attempt==1)
-        {
-            redis.expire(IP_key,chrono::seconds(300));
-        }
+        return false;
     }
+    else
+    {
+         return true;
+    }
+    return false;
 }

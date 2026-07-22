@@ -36,4 +36,26 @@ class RedisManager
           bool deleteOTP(
             const string &email
           );
+
+          int Attempt_check(
+            const string &email,
+            const string &IP,
+            const string &password
+          );
+
+          int increment_attempt(
+            const string &email,
+            const string &IP,
+            const string &password
+          );
+
+          bool block_user(
+            const string &email,
+            const string &IP
+          );
+
+          void reset_attempt(
+            const string &email,
+            const string &IP
+          );
 };

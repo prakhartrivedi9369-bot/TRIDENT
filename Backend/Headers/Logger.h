@@ -4,6 +4,8 @@
 
 #include "crow.h" // Crow framework include karna zaroori hai
 
+using namespace std;
+
 enum class LogEntry
 {
      ATTEMPT,
@@ -27,18 +29,8 @@ enum class LogEntry
      ATTEMPT_LIMIT_EXCEED
 };
 
-enum class Attempt_limit
-{
-     EMAIL_ATTEMPT,
 
-     IP_ATTEMPT,
 
-     ATTEMPT_NUMBER
-};
 
-int Attempt_check(const string &email,const string &IP,const string &password);
-void increment_attempt(const string &email,const string &IP,const string &password);
-void block_user(const string &email,const string &IP);
-void reset_attempt(const string &email,const string &IP);
 
 #endif
