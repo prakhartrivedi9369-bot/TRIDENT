@@ -40,7 +40,8 @@ class RedisManager
           int Attempt_check(
             const string &email,
             const string &IP,
-            const string &password
+            const string &password,
+            RedisManager &RedisManager
           );
 
           int increment_attempt(
@@ -51,7 +52,8 @@ class RedisManager
 
           bool block_user(
             const string &email,
-            const string &IP
+            const string &IP,
+            RedisManager &RedisManager
           );
 
           void reset_attempt(

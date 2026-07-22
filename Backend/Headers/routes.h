@@ -5,6 +5,6 @@
 
 void registerRoutes(crow::SimpleApp& app, RedisManager& RedisManager);
 void register_Home_Routes(crow::SimpleApp& app);
-void register_Login_Routes(crow::SimpleApp& app);
+void register_Login_Routes(crow::SimpleApp& app, RedisManager &RedisManager);
 void register_Signup_Routes(crow::SimpleApp& app);
 void register_Otp_Routes(crow::SimpleApp& app,RedisManager& RedisManager);

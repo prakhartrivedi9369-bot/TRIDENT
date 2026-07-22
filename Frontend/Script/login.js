@@ -74,7 +74,7 @@ async function handleLogin(event) {
         {
             alert("Invalid Password");
         }
-        else if(result.status === "Attempt_Limit")
+        else if(result.status === "ATTEMPT_LIMIT_EXCEED")
         {
             alert("Too Many Requests,Please Try Again in 4 minutes!");
         }

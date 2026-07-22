@@ -2,12 +2,13 @@
 #include "database.h"
 #include "crow.h"
 #include "Paths.h"
+#include "Redis.h"
 
 using namespace std;
 
-void handleLogin(const crow::request& req,crow::response& res);
+void handleLogin(const crow::request& req,crow::response& res,RedisManager &RedisManager);
 
-void register_Login_Routes(crow::SimpleApp& app)
+void register_Login_Routes(crow::SimpleApp& app,RedisManager &RedisManager)
 {
      //Login Route
      CROW_ROUTE(app, "/login")([]()
@@ -21,10 +22,10 @@ void register_Login_Routes(crow::SimpleApp& app)
          
          return crow::response(buffer.str());
      });
-     CROW_ROUTE(app, "/api/login").methods(crow::HTTPMethod::POST)([](const crow::request& req)
+     CROW_ROUTE(app, "/api/login").methods(crow::HTTPMethod::POST)([&RedisManager](const crow::request& req)
      {
             crow::response res;
-            handleLogin(req,res);
+            handleLogin(req,res,RedisManager);
             return res;
      });
      CROW_ROUTE(app, "/login.css")([]()
