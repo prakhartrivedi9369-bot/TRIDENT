@@ -86,7 +86,6 @@ bool RedisManager::block_user(const string &email, const string &IP, RedisManage
 
     if(!stored_email_attempt || !stored_ip_attempt)
     {
-        cout<<"Fuck"<<endl;
         return true;
     }
 
@@ -122,25 +121,36 @@ int RedisManager::Attempt_check(const string& email,const string& IP,const strin
     //Variable for Keys
     string email_key = "email_key:" + email;
     string IP_key = "IP_key:" + IP;
-     
+
     //Value fetched from redis
     auto stored_email_attempt = redis.get(email_key);
     auto stored_ip_attempt = redis.get(IP_key);
 
     //User are not stored in Redis
-    if(!stored_email_attempt || !stored_ip_attempt)
+    if(!stored_email_attempt && !stored_ip_attempt)
     {
        return increment_attempt(email,IP,password);
+    }
+    cout<<"fuck"<<endl;
+    if(!stored_email_attempt || !stored_ip_attempt)
+    {
+        return 3;
     }
 
     int email_attempt = stoi(*stored_email_attempt);
     int ip_attempt = stoi(*stored_ip_attempt);
 
+
     //Attempt limit exceed
-    if((email_attempt>=3) || (ip_attempt>=3))
+    if((email_attempt>=3) && (ip_attempt>=3))
     {
+       cout<<"fuck Prakhar"<<endl;
        block_user(email,IP,RedisManager);
        return 3;
+    }
+    if((email_attempt>=3) || (ip_attempt>=3))
+    {
+        return 3;
     }
 
     return increment_attempt(email,IP,password);
