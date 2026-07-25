@@ -22,16 +22,16 @@ RedisManager::RedisManager(const string &redisUri) : redis(redisUri)
 }
 
 // 1. Store OTP Logic
-bool RedisManager::storeOtp(const string &email, const string &otp, int ttl)
+bool RedisManager::storeOtp(const string &email, const string &otp, int ttl, const string &usecase)
 {
     try
     {
         //Dynamic Key Design: "otp:reason:email"
-       // string key = "otp:" + reason + ":" +  email;
-       string key = "otp:" + email;
+        // string key = "otp:" + reason + ":" +  email;
 
         //TTL set ke saath store karein
-        redis.set(key,otp,chrono::seconds(ttl));
+        redis.set("otp:" + email,otp,chrono::seconds(ttl));
+        redis.set("usecase:" + email,usecase,chrono::seconds(ttl));
         return true;
     }
     catch(const sw::redis::Error &e)
@@ -42,36 +42,39 @@ bool RedisManager::storeOtp(const string &email, const string &otp, int ttl)
 }
 
 // 2. Verify OTP Logic
-OTPstatus RedisManager::verifyOtp(const string &email, const string &user_otp)
+string RedisManager::verifyOtp(const string &email, const string &user_otp)
 {
     try
     {
         //Yahan par dhayaan rakhna ki 'reason' wahi ho jo store kaarte waqt tha
         //Agar multiple reasons hain, toh reason bhi parameters main pass kar dena baad main
-        string key = "otp:" + email; //Assume abhi login ke liye hai
+        string otp_key = "otp:" + email; //Assume abhi login ke liye hai
+        string usecase_key = "usecase:" + email;
 
-        auto stored_otp = redis.get(key);
+        auto stored_otp = redis.get(otp_key);
+        auto stored_usecase = redis.get(usecase_key);
 
         //Case 1: Key mili hi nahi (Ya toh banayi nahi ya TTL se expire ho gayi)
-        if(!stored_otp)
+        if(!stored_otp || !stored_usecase)
         {
-            return OTPstatus::EXPIRED;
+            return "EXPIRED";
         }
 
         //Case 2. OTP match ho gaya
         if(*stored_otp == user_otp)
         {
-            redis.del(key); // Instant Delete verify hote hi!
-            return OTPstatus::OTP_VERIFIED;
+            redis.del(otp_key); 
+            redis.del(usecase_key); // Instant Delete verify hote hi!
+            return *stored_usecase;
         }
 
         //Case 3. Key mili par OTP galat tha
-        return OTPstatus::WRONG_OTP;
+        return "WRONG_OTP";
     }
     catch(const sw::redis::Error &e)
     { 
         cerr << "Error verifying OTP in Redis: " << e.what() << endl;
-        return OTPstatus::REDIS_ERROR;
+        return "REDIS_ERROR";
     }
 }
 bool RedisManager::block_user(const string &email, const string &IP, RedisManager &RedisManager)

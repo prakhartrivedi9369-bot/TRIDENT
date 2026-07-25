@@ -11,7 +11,7 @@
 using namespace std;
 
 string generateOTP();
-bool sendEmail(const string&  recipient,const string& otp,RedisManager& RedisManager);
+string sendEmail(const string&  recipient,const string& otp,RedisManager& RedisManager,const string &usecase);
 OTPstatus verifyOTP(const string& email,const string& enteredOtp,RedisManager& RedisManager);
 
 static size_t WriteCallback(
@@ -38,24 +38,28 @@ string generateOTP()
 
 OTPstatus verifyOTP(const string& email,const string& enteredOtp, RedisManager& RedisManager)
 {
-    OTPstatus status = RedisManager.verifyOtp(email,enteredOtp);
-    if(status==OTPstatus::OTP_VERIFIED)
+    string status = RedisManager.verifyOtp(email,enteredOtp);
+    if(status=="FORGET_PASSWORD")
+    {
+        return OTPstatus::FORGET_PASSWORD;
+    }
+    if(status=="LOGIN_SUCCESS")
     {
         return OTPstatus::OTP_VERIFIED;
     }
-    if(status==OTPstatus::WRONG_OTP)
+    if(status=="WRONG_OTP")
     {
         return OTPstatus::WRONG_OTP;
     }
-    if(status==OTPstatus::EXPIRED)
+    if(status=="EXPIRED")
     {
         return OTPstatus::EXPIRED;
     }
     return OTPstatus::REDIS_ERROR;
 }
-bool sendEmail(const string& recipient,const string& otp, RedisManager& RedisManager)
+string sendEmail(const string& recipient,const string& otp, RedisManager& RedisManager, const string &usecase)
 {
-    if(RedisManager.storeOtp(recipient,otp,120))
+    if(RedisManager.storeOtp(recipient,otp,120,usecase))
     {
         cout<<"OTP stored in Redis successFully! " << endl;
     }
@@ -70,7 +74,7 @@ bool sendEmail(const string& recipient,const string& otp, RedisManager& RedisMan
     if(!curl)
     {
         cout<<"Curl init failed"<<endl;
-        return false;
+        return "Curl_INIT_failed";
     }
 
     curl_easy_setopt(
@@ -173,5 +177,8 @@ bool sendEmail(const string& recipient,const string& otp, RedisManager& RedisMan
     curl_slist_free_all(headers);
     curl_easy_cleanup(curl);
 
-    return (res == CURLE_OK);
+    if(res == CURLE_OK)
+    {
+        return usecase;
+    }
 }

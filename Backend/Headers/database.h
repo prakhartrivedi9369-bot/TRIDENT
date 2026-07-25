@@ -17,5 +17,6 @@ void cleanup_database();
 int verifyCredentialsInDB(const string& email, const string& password);
 int createUserInDB(const string& username, const string& email, const string& password);
 void saveLogInDB(LogEntry event,const string& ip,const string& email);
+int verifyUserInDB(const string& email);
 
 #endif

@@ -9,7 +9,7 @@
 using namespace std;
 
 string generateOTP();
-bool sendEmail(const string&  recipient,const string& otp,RedisManager& RedisManager);
+string sendEmail(const string&  recipient,const string& otp,RedisManager& RedisManager,const string &usecase);
 OTPstatus verifyOTP(const string& email,const string& enteredOtp,RedisManager& RedisManager);
 
 void register_Otp_Routes(crow::SimpleApp& app,RedisManager& RedisManager)
@@ -30,11 +30,13 @@ void register_Otp_Routes(crow::SimpleApp& app,RedisManager& RedisManager)
            auto body = crow::json::load(req.body);
             
            string email = body["email"].s();
+           string usecase = body["usecase"].s();
+           cout<<"fuck"<<endl;
            string otp = generateOTP();
 
            cout<<otp<<endl;
 
-           sendEmail(email,otp,RedisManager);
+           sendEmail(email,otp,RedisManager,usecase);
 
            return crow::response(200);
      });
@@ -53,6 +55,12 @@ void register_Otp_Routes(crow::SimpleApp& app,RedisManager& RedisManager)
             {
                 response["success"] = true;
                 response["code"] = "OTP_VERIFIED";
+                response["message"] = "OTP verified successfully";
+            }
+            if(result == OTPstatus::FORGET_PASSWORD)
+            {
+                response["success"] = true;
+                response["code"] = "FORGET_PASSWORD";
                 response["message"] = "OTP verified successfully";
             }
             if(result == OTPstatus::WRONG_OTP)

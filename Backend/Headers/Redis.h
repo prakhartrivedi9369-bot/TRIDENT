@@ -11,7 +11,8 @@ enum class OTPstatus
     OTP_VERIFIED,
     WRONG_OTP,
     EXPIRED,
-    REDIS_ERROR
+    REDIS_ERROR,
+    FORGET_PASSWORD
 };
 
 class RedisManager
@@ -25,10 +26,11 @@ class RedisManager
           bool storeOtp(
             const string &email,
             const string &otp,
-            int ttl
+            int ttl,
+            const string &usecase
           );
 
-          OTPstatus verifyOtp(
+          string verifyOtp(
             const string &email,
             const string &enteredOTP
           );

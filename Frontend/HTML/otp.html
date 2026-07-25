@@ -416,11 +416,14 @@ form.addEventListener("submit", async (e) => {
     const correctOTP = await response.json();
     alert(correctOTP.message);
 
-    if (correctOTP.success) {
+    if (correctOTP.code == "FORGET_PASSWORD") 
+    {
       alert("Success");
       verifyBtn.disabled = false;
-      // window.location.href = "/";
-    } else {
+      window.location.href = "/Pass_reset";
+    } 
+    else 
+    {
       if (correctOTP.code == "WRONG_OTP") {
         alert("Wrong OTP");
       }

@@ -26,16 +26,19 @@ add_executable(my_app
                src/database.cpp 
                src/signup.cpp 
                src/otp.cpp
+               src/forget.cpp
                src/env_config.cpp
                src/crypto_utils.cpp
                Database_check/login_auth.cpp 
                Database_check/signup_auth.cpp
                Database_check/Logs_auth.cpp
+               Database_check/forget_auth.cpp
                src/JWT_token.cpp
                Routes/Public/Home_Route.cpp
                Routes/Public/Login_Route.cpp
                Routes/Public/Signup_Route.cpp
                Routes/Public/OTP_Route.cpp
+               Routes/Public/Forget_Route.cpp
                src/Routes_Manager.cpp
                src/Redis.cpp
                )

@@ -26,7 +26,9 @@ enum class LogEntry
 
      SERVER_ERROR,
 
-     ATTEMPT_LIMIT_EXCEED
+     ATTEMPT_LIMIT_EXCEED,
+
+     FORGET_PASSWORD
 };
 
 

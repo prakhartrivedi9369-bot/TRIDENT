@@ -1,4 +1,4 @@
-# [TRIDENT]
+# TRIDENT
 
 <div align="center">
 
@@ -22,7 +22,7 @@
 
 # 📖 Overview
 
-**[Trident]** is a full-stack stock exchange web application being developed from scratch using **Modern C++17**.
+**Trident** is a full-stack stock exchange web application being developed from scratch using **Modern C++17**.
 
 Unlike many web projects that rely on high-level frameworks, this project focuses on building a secure backend with C++, emphasizing low latency, modular architecture, and strong security practices.
 
