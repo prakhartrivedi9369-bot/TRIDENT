@@ -48,7 +48,7 @@ string RedisManager::verifyOtp(const string &email, const string &user_otp)
     {
         //Yahan par dhayaan rakhna ki 'reason' wahi ho jo store kaarte waqt tha
         //Agar multiple reasons hain, toh reason bhi parameters main pass kar dena baad main
-        string otp_key = "otp:" + email; //Assume abhi login ke liye hai
+        string otp_key = "otp:" + email; 
         string usecase_key = "usecase:" + email;
 
         auto stored_otp = redis.get(otp_key);

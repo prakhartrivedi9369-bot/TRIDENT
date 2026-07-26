@@ -4,6 +4,7 @@
 #include <mongoc/mongoc.h>
 #include <string>
 #include <iostream>
+#include "Redis.h"
 
 using namespace std;
 
@@ -40,5 +41,9 @@ int verifyUserInDB(const string& email)
      mongoc_cursor_destroy(cursor);
      mongoc_collection_destroy(collection);
 
-    return 1; // ✅ Success
+     return 1; // ✅ Success
+}
+int Pass_reset(const string& password,RedisManager& RedisManager)
+{
+     
 }

@@ -1,12 +1,14 @@
 #include "routes.h"
 #include "crow.h"
 #include "Paths.h"
+#include "database.h"
 
 using namespace std;
 
 void handle_forget(const crow::request& req,crow::response& res);
 
-void register_forget_Routes(crow::SimpleApp& app)
+
+void register_forget_Routes(crow::SimpleApp& app,RedisManager& RedisManager)
 {
      //Forget Route
      CROW_ROUTE(app, "/forget")([]()
@@ -36,5 +38,11 @@ void register_forget_Routes(crow::SimpleApp& app)
              buffer << file.rdbuf();
 
              return crow::response(buffer.str());
+     });
+     CROW_ROUTE(app, "/api/Pass_reset").methods(crow::HTTPMethod::POST)([&RedisManager](const crow::request& req)
+     {
+             crow::response res;
+             Pass_reset(req,res,RedisManager);
+             return res;
      });
 }
