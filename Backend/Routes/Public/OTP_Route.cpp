@@ -5,6 +5,7 @@
 #include <ctime>
 #include <iostream>
 #include "Redis.h"
+#incldue "JWT_token.h"
 
 using namespace std;
 
@@ -61,6 +62,7 @@ void register_Otp_Routes(crow::SimpleApp& app,RedisManager& RedisManager)
             {
                 response["success"] = true;
                 response["code"] = "FORGET_PASSWORD";
+                response["reset_token"] = generate_reset_token();
                 response["message"] = "OTP verified successfully";
             }
             if(result == OTPstatus::WRONG_OTP)
