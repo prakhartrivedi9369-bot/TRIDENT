@@ -37,9 +37,16 @@ void register_Otp_Routes(crow::SimpleApp& app,RedisManager& RedisManager)
 
            cout<<otp<<endl;
 
-           sendEmail(email,otp,RedisManager,usecase);
+           auto result = sendEmail(email,otp,RedisManager,usecase);
 
-           return crow::response(200);
+           crow::json::wvalue response;
+
+           response["success"] = result.success;
+           response["usecase"] = result.usecase;
+           response["reset_token"] = result.reset_token;
+           response["message"] = result.message;
+
+           return crow::response(response);
      });
      CROW_ROUTE(app, "/verify-otp").methods("POST"_method)([&RedisManager](const crow::request& req)
      {

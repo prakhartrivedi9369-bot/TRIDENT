@@ -32,7 +32,4 @@ enum class LogEntry
 };
 
 
-
-
-
 #endif

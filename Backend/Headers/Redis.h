@@ -3,6 +3,7 @@
 #include "crow.h"
 #include <sw/redis++/redis++.h>
 #include <string>
+#include <optional>
 
 using namespace std;
 
@@ -62,4 +63,16 @@ class RedisManager
             const string &email,
             const string &IP
           );
+
+          int Reset_token_check(
+            const string& reset_token
+          );
 };
+
+struct VerifyOtpResult
+{
+    bool success;
+    optional<string> usecase;
+    optional<string> reset_token;
+    string message;
+}

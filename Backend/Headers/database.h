@@ -18,6 +18,6 @@ int verifyCredentialsInDB(const string& email, const string& password);
 int createUserInDB(const string& username, const string& email, const string& password);
 void saveLogInDB(LogEntry event,const string& ip,const string& email);
 int verifyUserInDB(const string& email);
-int Pass_reset(const string& password,RedisManager& RedisManager);
+int New_password(const string& new_password,const string& reset_token);
 
 #endif

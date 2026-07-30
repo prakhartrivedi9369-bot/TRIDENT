@@ -28,7 +28,7 @@ bool RedisManager::storeOtp(const string &email, const string &otp, int ttl, con
 }
 
 // 2. Verify OTP Logic
-string RedisManager::verifyOtp(const string &email, const string &user_otp)
+VerifyOtpResult RedisManager::verifyOtp(const string &email, const string &user_otp)
 {
     try
     {
@@ -45,24 +45,44 @@ string RedisManager::verifyOtp(const string &email, const string &user_otp)
         //Case 1: Key mili hi nahi (Ya toh banayi nahi ya TTL se expire ho gayi)
         if(!stored_otp || !stored_usecase)
         {
-            return "EXPIRED";
+            return {
+                false,
+                nullopt,
+                nullopt,
+                "OTP EXPIRED"
+            };
         }
 
         //Case 2. OTP match ho gaya
         if(*stored_otp == user_otp)
         {
-            redis.set("reset_token:" + email,reset_token,chrono::seconds(300));
+            redis.set("token_email:" + reset_token,email,chrono::seconds(300));
             redis.del(otp_key); 
             redis.del(usecase_key); // Instant Delete verify hote hi!
-            return *stored_usecase;
+            return {
+                true,
+                "PASS_RESET",
+                reset_token,
+                "OTP_VERIFIED"
+            };
         }
 
         //Case 3. Key mili par OTP galat tha
-        return "WRONG_OTP";
+        return {
+            false,
+            nullopt,
+            nullopt,
+            "WRONG_OTP"
+        };
     }
     catch(const sw::redis::Error &e)
     { 
         cerr << "Error verifying OTP in Redis: " << e.what() << endl;
-        return "REDIS_ERROR";
+        return {
+            false,
+            nullopt,
+            nullopt,
+            "Redis Error"
+        };
     }
 }

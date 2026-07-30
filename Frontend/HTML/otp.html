@@ -305,6 +305,25 @@ h1{
 </div>
 
 <script>
+
+const usecase = sessionStorage.getItem("usecase");
+
+// Call send-otp route
+await fetch('/send-otp', {
+      method: 'POST',
+      headers: {
+              'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+              email: email,
+              usecase: usecase
+              })
+          });
+            
+const result = await response.json();
+
+alert(result.message);
+
 const inputs = document.querySelectorAll(".otp-input");
 const form = document.getElementById("otpForm");
 const statusEl = document.getElementById("status");
@@ -420,6 +439,7 @@ form.addEventListener("submit", async (e) => {
     {
       alert("Success");
       verifyBtn.disabled = false;
+      sessionStorage.setItem("reset_token",correctOTP.reset_token);
       window.location.href = "/Pass_reset";
     } 
     else 
@@ -528,10 +548,10 @@ resendBtn.addEventListener("click", async () => {
 
     const result = await response.json();
 
-    if (response.ok) {
-      showStatus("New verification code sent.", "success");
+    if (result.success) {
+      alert("New Verification code is sent on registered email!");
     } else {
-      showStatus(result.message || "Failed to send OTP.", "error");
+      alert("Something went wrong! Please try again later");
     }
   } catch (error) {
     console.error(error);

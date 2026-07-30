@@ -43,7 +43,7 @@ int verifyUserInDB(const string& email)
 
      return 1; // ✅ Success
 }
-int Pass_reset(const string& password,RedisManager& RedisManager)
+int New_password(const string& new_password,const string& reset_token)
 {
-     
+     int Redis_status = Reset_token_check(reset_token);
 }

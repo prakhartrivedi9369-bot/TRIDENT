@@ -3,6 +3,8 @@
 #include <sstream>
 #include <iomanip>
 #include "JWT_token.h"
+#include "Logger.h"
+#include "Redis.h"
 
 using namespace std;
 
@@ -20,6 +22,9 @@ string generate_reset_token()
            << setfill('0')
         static_cast<int>(buffer[i]);
     }
-
     return ss.str();
+}
+int Reset_token_check(const string& reset_token)
+{
+    string 
 }

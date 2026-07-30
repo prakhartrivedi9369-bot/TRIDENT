@@ -514,24 +514,11 @@ async function handleRecovery(event) {
             // Small delay for animation
             setTimeout(() => {
                 // Redirect to OTP page
-                localStorage.setItem("userEmail", email);
+                sessionStorage.setItem("usecase","FORGET_PASSWORD");
                 window.location.href = "/otp";
 
             }, 1000);
 
-            // Call send-otp route
-             await fetch('/send-otp', {
-             method: 'POST',
-             headers: {
-                       'Content-Type': 'application/json'
-                      },
-                      body: JSON.stringify({
-                      email: email,
-                      usecase: "FORGET_PASSWORD"
-                   })
-             });
-
-            alert("OTP sent to registered email successfully");
         } 
         else 
         {

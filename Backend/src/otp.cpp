@@ -36,9 +36,10 @@ string generateOTP()
     return to_string(dist(gen));
 }
 
-OTPstatus verifyOTP(const string& email,const string& enteredOtp, RedisManager& RedisManager)
+VerifyOtpResult verifyOTP(const string& email,const string& enteredOtp, RedisManager& RedisManager)
 {
-    string status = RedisManager.verifyOtp(email,enteredOtp);
+    auto status = RedisManager.verifyOtp(email,enteredOtp);
+
     if(status=="FORGET_PASSWORD")
     {
         return OTPstatus::FORGET_PASSWORD;
@@ -57,7 +58,7 @@ OTPstatus verifyOTP(const string& email,const string& enteredOtp, RedisManager& 
     }
     return OTPstatus::REDIS_ERROR;
 }
-string sendEmail(const string& recipient,const string& otp, RedisManager& RedisManager, const string &usecase)
+VerifyOtpResult sendEmail(const string& recipient,const string& otp, RedisManager& RedisManager, const string &usecase)
 {
     if(RedisManager.storeOtp(recipient,otp,120,usecase))
     {
@@ -74,7 +75,12 @@ string sendEmail(const string& recipient,const string& otp, RedisManager& RedisM
     if(!curl)
     {
         cout<<"Curl init failed"<<endl;
-        return "Curl_INIT_failed";
+        return {
+               false,
+               nullopt,
+               nullopt,
+               "CURL_INIT_FAILED"
+        };
     }
 
     curl_easy_setopt(
@@ -179,6 +185,11 @@ string sendEmail(const string& recipient,const string& otp, RedisManager& RedisM
 
     if(res == CURLE_OK)
     {
-        return usecase;
+        return{
+            true,
+            usecase,
+            nullopt,
+            usecase
+        };
     }
 }
