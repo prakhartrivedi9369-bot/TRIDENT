@@ -6,6 +6,7 @@
 using namespace std;
 
 void handle_forget(const crow::request& req,crow::response& res);
+void Pass_reset(const crow::request& req,crow::response& res,RedisManager& RedisManager);
 
 void register_forget_Routes(crow::SimpleApp& app,RedisManager& RedisManager)
 {
@@ -38,10 +39,10 @@ void register_forget_Routes(crow::SimpleApp& app,RedisManager& RedisManager)
 
              return crow::response(buffer.str());
      });
-     CROW_ROUTE(app, "/api/Pass-reset").methods(crow::HTTPMethod::POST)([](const crow::request& req)
+     CROW_ROUTE(app, "/api/Pass-reset").methods(crow::HTTPMethod::POST)([&RedisManager](const crow::request& req)
      {
              crow::response res;
-             Pass_reset(req,res);
+             Pass_reset(req,res,RedisManager);
              return res;
      });
 }

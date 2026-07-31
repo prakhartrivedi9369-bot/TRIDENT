@@ -435,9 +435,8 @@ form.addEventListener("submit", async (e) => {
     const correctOTP = await response.json();
     alert(correctOTP.message);
 
-    if (correctOTP.code == "FORGET_PASSWORD") 
+    if (correctOTP.success) 
     {
-      alert("Success");
       verifyBtn.disabled = false;
       sessionStorage.setItem("reset_token",correctOTP.reset_token);
       window.location.href = "/Pass_reset";

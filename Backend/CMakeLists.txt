@@ -22,25 +22,28 @@ add_subdirectory(External/Crow)
 # Apne main executable ko define karein
 add_executable(my_app 
                main.cpp 
-               src/login.cpp
-               src/database.cpp 
-               src/signup.cpp 
-               src/otp.cpp
-               src/forget.cpp
-               src/env_config.cpp
-               src/crypto_utils.cpp
-               Database_check/login_auth.cpp 
-               Database_check/signup_auth.cpp
-               Database_check/Logs_auth.cpp
                Database_check/forget_auth.cpp
-               src/JWT_token.cpp
+               Database_check/login_auth.cpp 
+               Database_check/Logs_auth.cpp
+               Database_check/signup_auth.cpp        
+               Redis/AttemptManager.cpp
+               Redis/OTP.cpp
+               Redis/Redis_Start.cpp
+               Redis/Reset_Pass.cpp
+               Routes/Public/Forget_Route.cpp
                Routes/Public/Home_Route.cpp
                Routes/Public/Login_Route.cpp
-               Routes/Public/Signup_Route.cpp
                Routes/Public/OTP_Route.cpp
-               Routes/Public/Forget_Route.cpp
+               Routes/Public/Signup_Route.cpp
+               src/crypto_utils.cpp
+               src/database.cpp
+               src/env_config.cpp
+               src/forget.cpp
+               src/JWT_token.cpp
+               src/login.cpp
+               src/otp.cpp
                src/Routes_Manager.cpp
-               src/Redis.cpp
+               src/signup.cpp 
                )
 
 target_include_directories(my_app PRIVATE

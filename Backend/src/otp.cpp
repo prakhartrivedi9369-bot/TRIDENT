@@ -38,25 +38,27 @@ string generateOTP()
 
 VerifyOtpResult verifyOTP(const string& email,const string& enteredOtp, RedisManager& RedisManager)
 {
-    auto status = RedisManager.verifyOtp(email,enteredOtp);
+    VerifyOtpResult result = RedisManager.verifyOtp(email,enteredOtp);
 
-    if(status=="FORGET_PASSWORD")
-    {
-        return OTPstatus::FORGET_PASSWORD;
-    }
-    if(status=="LOGIN_SUCCESS")
-    {
-        return OTPstatus::OTP_VERIFIED;
-    }
-    if(status=="WRONG_OTP")
-    {
-        return OTPstatus::WRONG_OTP;
-    }
-    if(status=="EXPIRED")
-    {
-        return OTPstatus::EXPIRED;
-    }
-    return OTPstatus::REDIS_ERROR;
+    return result;
+
+ //   if(status=="FORGET_PASSWORD")
+  //  {
+ //       return OTPstatus::FORGET_PASSWORD;
+ //   }
+ //   if(status=="LOGIN_SUCCESS")
+ //   {
+ //       return OTPstatus::OTP_VERIFIED;
+ //   }
+ //   if(status=="WRONG_OTP")
+ //   {
+  //      return OTPstatus::WRONG_OTP;
+  //  }
+  //  if(status=="EXPIRED")
+  //  {
+ //       return OTPstatus::EXPIRED;
+ //   }
+ //   return OTPstatus::REDIS_ERROR;
 }
 VerifyOtpResult sendEmail(const string& recipient,const string& otp, RedisManager& RedisManager, const string &usecase)
 {

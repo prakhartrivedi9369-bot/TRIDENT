@@ -28,7 +28,7 @@ bool RedisManager::storeOtp(const string &email, const string &otp, int ttl, con
 }
 
 // 2. Verify OTP Logic
-VerifyOtpResult RedisManager::verifyOtp(const string &email, const string &user_otp)
+VerifyOtpResult RedisManager::verifyOtp(const string &email, const string &user_otp,RedisManager& RedisManager)
 {
     try
     {
@@ -61,7 +61,7 @@ VerifyOtpResult RedisManager::verifyOtp(const string &email, const string &user_
             redis.del(usecase_key); // Instant Delete verify hote hi!
             return {
                 true,
-                "PASS_RESET",
+                stored_usecase,
                 reset_token,
                 "OTP_VERIFIED"
             };

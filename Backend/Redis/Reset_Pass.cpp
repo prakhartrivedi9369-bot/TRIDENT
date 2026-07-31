@@ -24,7 +24,29 @@ string generate_reset_token()
     }
     return ss.str();
 }
-int Reset_token_check(const string& reset_token)
+string Reset_token_check(const string& reset_token)
 {
-    string 
+    try
+    {
+        string token_key = "token_email:" + reset_token;
+
+        auto stored_token = redis.get(token_key);
+
+        //Case 1: Key mili hi nahi (Ya toh banayi nahi ya TTL se expire ho gayi)
+        if(!stored_token)
+        {
+            return "TOKEN_EXPIRED";
+        }
+
+        string email = *stored_token;
+
+        redis.del(token_key);
+        
+        return email;
+    }
+    catch(const sw::redis::Error &e)
+    { 
+        cerr << "Error verifying reset_token in Redis: " << e.what() << endl;
+        return "REDIS_ERROR";
+    }
 }

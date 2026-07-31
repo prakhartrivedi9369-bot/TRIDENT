@@ -5,7 +5,7 @@
 #include <ctime>
 #include <iostream>
 #include "Redis.h"
-#incldue "JWT_token.h"
+#include "JWT_token.h"
 
 using namespace std;
 
@@ -50,48 +50,21 @@ void register_Otp_Routes(crow::SimpleApp& app,RedisManager& RedisManager)
      });
      CROW_ROUTE(app, "/verify-otp").methods("POST"_method)([&RedisManager](const crow::request& req)
      {
-       auto body = crow::json::load(req.body);
+        auto body = crow::json::load(req.body);
 
-       string email = body["email"].s();
-       string otp = body["otp"].s();
+        string email = body["email"].s();
+        string otp = body["otp"].s();
 
-       OTPstatus result = verifyOTP(email, otp, RedisManager);
+        VerifyOtpResult result = verifyOTP(email, otp, RedisManager);
 
-       crow::json::wvalue response;
-
-            if(result == OTPstatus::OTP_VERIFIED)
-            {
-                response["success"] = true;
-                response["code"] = "OTP_VERIFIED";
-                response["message"] = "OTP verified successfully";
-            }
-            if(result == OTPstatus::FORGET_PASSWORD)
-            {
-                response["success"] = true;
-                response["code"] = "FORGET_PASSWORD";
-                response["reset_token"] = generate_reset_token();
-                response["message"] = "OTP verified successfully";
-            }
-            if(result == OTPstatus::WRONG_OTP)
-            {
-                response["success"] = false;
-                response["code"] = "WRONG_OTP";
-                response["message"] = "Wrong OTP, Try again!";
-            }
+        crow::json::wvalue response;
             
-            if(result == OTPstatus::EXPIRED)
-            {
-                response["success"] = false;
-                response["code"] = "OTP_EXPIRED";
-                response["message"] = "OTP Expired, Try again!";
-            }
-            if(result == OTPstatus::REDIS_ERROR)
-            {
-                response["success"] = false;
-                response["code"] = "REDIS_ERROR";
-                response["message"] = "Server Error!";
-            }
-            return crow::response(response);
+        response["success"] = result.success;
+        response["message"] = result.message;
+        response["usecase"] = result.usecase;
+        response["reset_token"] = result.reset_token;
+            
+        return crow::response(200,response);
     });
 }
 

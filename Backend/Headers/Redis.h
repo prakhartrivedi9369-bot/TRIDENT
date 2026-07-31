@@ -64,7 +64,7 @@ class RedisManager
             const string &IP
           );
 
-          int Reset_token_check(
+          string Reset_token_check(
             const string& reset_token
           );
 };
@@ -75,4 +75,4 @@ struct VerifyOtpResult
     optional<string> usecase;
     optional<string> reset_token;
     string message;
-}
+};

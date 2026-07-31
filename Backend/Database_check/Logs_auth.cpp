@@ -63,6 +63,16 @@ void saveLogInDB(LogEntry event,const string& ip,const string& email)
             status="FORGET_PASSWORD";
             break;
         }
+        case LogEntry::PASSWORD_RESET:
+        {
+            status="PASSWORD_RESET";
+            break;
+        }
+        case LogEntry::PASSWORD_RESET_TOKEN_EXPIRED:
+        {
+            status="PASSWORD_RESET_TOKEN_EXPIRED";
+            break;
+        }
      }
     mongoc_collection_t *collection = mongoc_client_get_collection(global_db_client,"CPP-database","Logs");
     bson_error_t error;

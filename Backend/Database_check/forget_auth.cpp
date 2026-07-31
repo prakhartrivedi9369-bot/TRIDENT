@@ -43,7 +43,64 @@ int verifyUserInDB(const string& email)
 
      return 1; // ✅ Success
 }
-int New_password(const string& new_password,const string& reset_token)
+int New_password(const string& new_password,const string& reset_token,RedisManager& RedisManager)
 {
-     int Redis_status = Reset_token_check(reset_token);
+     string Redis_status = RedisManager.Reset_token_check(reset_token);
+
+     if(Redis_status == "TOKEN_EXPIRED")
+     {
+          return 0;
+     }
+     if(Redis_status == "REDIS_ERROR")
+     {
+          return -1;
+     }
+     if(!global_db_client)
+     { 
+        return -2;
+     }
+     
+     mongoc_collection_t *collection = mongoc_client_get_collection(global_db_client,
+          "CPP_database",
+          "users"
+     );
+     bson_error_t error;
+
+     string secure_hash = CryptoUtils::hash_password(new_password);
+
+     bson_t *filter = BCON_NEW(
+     "email",BCON_UTF8(Redis_status.c_str())
+     );
+
+     bson_t *update = BCON_NEW(
+          "$set",
+          "{",
+              "password",
+     BCON_UTF8(secure_hash.c_str()),
+          "}"
+     );
+
+    bool success = mongoc_collection_update_one(collection,filter,update,NULL,NULL,&error);
+
+    if(!success)
+    {
+       bson_destroy(filter);
+       bson_destroy(update);
+       mongoc_collection_destroy(collection);
+       cerr<<error.message<<endl;
+       return -3;
+    }
+    else
+    {
+       bson_destroy(filter);
+       bson_destroy(update);
+       mongoc_collection_destroy(collection);
+       cout<<"Password updated successfully!"<<endl;
+       return 1;
+    }
+
+    bson_destroy(update);
+    mongoc_collection_destroy(collection);
+
+    return 2;
 }
