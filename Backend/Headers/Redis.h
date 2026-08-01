@@ -16,6 +16,14 @@ enum class OTPstatus
     FORGET_PASSWORD
 };
 
+struct VerifyOtpResult
+{
+    bool success;
+    optional<string> usecase;
+    optional<string> reset_token;
+    string message;
+};
+
 class RedisManager
 {
      private:
@@ -31,7 +39,7 @@ class RedisManager
             const string &usecase
           );
 
-          string verifyOtp(
+          VerifyOtpResult verifyOtp(
             const string &email,
             const string &enteredOTP
           );
@@ -67,12 +75,4 @@ class RedisManager
           string Reset_token_check(
             const string& reset_token
           );
-};
-
-struct VerifyOtpResult
-{
-    bool success;
-    optional<string> usecase;
-    optional<string> reset_token;
-    string message;
 };

@@ -10,8 +10,8 @@
 using namespace std;
 
 string generateOTP();
-string sendEmail(const string&  recipient,const string& otp,RedisManager& RedisManager,const string &usecase);
-OTPstatus verifyOTP(const string& email,const string& enteredOtp,RedisManager& RedisManager);
+VerifyOtpResult sendEmail(const string&  recipient,const string& otp,RedisManager& RedisManager,const string &usecase);
+VerifyOtpResult verifyOTP(const string& email,const string& enteredOtp,RedisManager& RedisManager);
 
 void register_Otp_Routes(crow::SimpleApp& app,RedisManager& RedisManager)
 {
@@ -37,16 +37,16 @@ void register_Otp_Routes(crow::SimpleApp& app,RedisManager& RedisManager)
 
            cout<<otp<<endl;
 
-           auto result = sendEmail(email,otp,RedisManager,usecase);
+           VerifyOtpResult result = sendEmail(email,otp,RedisManager,usecase);
 
-           crow::json::wvalue response;
+           crow::response res;
 
-           response["success"] = result.success;
-           response["usecase"] = result.usecase;
-           response["reset_token"] = result.reset_token;
-           response["message"] = result.message;
+           res.success= result.success;
+           res.usecase = result.usecase;
+           res.reset_token = result.reset_token;
+           res.message = result.message;
 
-           return crow::response(response);
+           return res;
      });
      CROW_ROUTE(app, "/verify-otp").methods("POST"_method)([&RedisManager](const crow::request& req)
      {
@@ -57,14 +57,14 @@ void register_Otp_Routes(crow::SimpleApp& app,RedisManager& RedisManager)
 
         VerifyOtpResult result = verifyOTP(email, otp, RedisManager);
 
-        crow::json::wvalue response;
+        crow::response res;
             
-        response["success"] = result.success;
-        response["message"] = result.message;
-        response["usecase"] = result.usecase;
-        response["reset_token"] = result.reset_token;
+        res.success = result.success;
+        res.message= result.message;
+        res.usecase = result.usecase;
+        res.reset_token = result.reset_token;    
             
-        return crow::response(200,response);
+        return res;
     });
 }
 

@@ -11,8 +11,8 @@
 using namespace std;
 
 string generateOTP();
-string sendEmail(const string&  recipient,const string& otp,RedisManager& RedisManager,const string &usecase);
-OTPstatus verifyOTP(const string& email,const string& enteredOtp,RedisManager& RedisManager);
+VerifyOtpResult sendEmail(const string&  recipient,const string& otp,RedisManager& RedisManager,const string &usecase);
+VerifyOtpResult verifyOTP(const string& email,const string& enteredOtp,RedisManager& RedisManager);
 
 static size_t WriteCallback(
     void* contents,
@@ -41,24 +41,6 @@ VerifyOtpResult verifyOTP(const string& email,const string& enteredOtp, RedisMan
     VerifyOtpResult result = RedisManager.verifyOtp(email,enteredOtp);
 
     return result;
-
- //   if(status=="FORGET_PASSWORD")
-  //  {
- //       return OTPstatus::FORGET_PASSWORD;
- //   }
- //   if(status=="LOGIN_SUCCESS")
- //   {
- //       return OTPstatus::OTP_VERIFIED;
- //   }
- //   if(status=="WRONG_OTP")
- //   {
-  //      return OTPstatus::WRONG_OTP;
-  //  }
-  //  if(status=="EXPIRED")
-  //  {
- //       return OTPstatus::EXPIRED;
- //   }
- //   return OTPstatus::REDIS_ERROR;
 }
 VerifyOtpResult sendEmail(const string& recipient,const string& otp, RedisManager& RedisManager, const string &usecase)
 {
