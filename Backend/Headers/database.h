@@ -5,6 +5,7 @@
 #include "crow.h"
 #include <string>
 #include "Logger.h"
+#include "Redis.h"
 
 using namespace std;
 
@@ -18,6 +19,6 @@ int verifyCredentialsInDB(const string& email, const string& password);
 int createUserInDB(const string& username, const string& email, const string& password);
 void saveLogInDB(LogEntry event,const string& ip,const string& email);
 int verifyUserInDB(const string& email);
-int New_password(const string& new_password,const string& reset_token);
+int New_password(const string& new_password,const string& reset_token,RedisManager& RedisManager);
 
 #endif

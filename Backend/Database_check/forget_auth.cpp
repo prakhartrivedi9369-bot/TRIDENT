@@ -45,7 +45,7 @@ int verifyUserInDB(const string& email)
 }
 int New_password(const string& new_password,const string& reset_token,RedisManager& RedisManager)
 {
-     string Redis_status = RedisManager.Reset_token_check(reset_token);
+     string Redis_status = RedisManager.Reset_token_check(reset_token,RedisManager);
 
      if(Redis_status == "TOKEN_EXPIRED")
      {

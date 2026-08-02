@@ -38,7 +38,7 @@ string generateOTP()
 
 VerifyOtpResult verifyOTP(const string& email,const string& enteredOtp, RedisManager& RedisManager)
 {
-    VerifyOtpResult result = RedisManager.verifyOtp(email,enteredOtp);
+    VerifyOtpResult result = RedisManager.verifyOtp(email,enteredOtp,RedisManager);
 
     return result;
 }
@@ -176,4 +176,10 @@ VerifyOtpResult sendEmail(const string& recipient,const string& otp, RedisManage
             usecase
         };
     }
+    return{
+            false,
+            nullopt,
+            nullopt,
+            "UNKNOWN"
+        };
 }

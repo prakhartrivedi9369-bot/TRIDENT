@@ -39,14 +39,21 @@ void register_Otp_Routes(crow::SimpleApp& app,RedisManager& RedisManager)
 
            VerifyOtpResult result = sendEmail(email,otp,RedisManager,usecase);
 
-           crow::response res;
+           crow::json::wvalue json;
 
-           res.success= result.success;
-           res.usecase = result.usecase;
-           res.reset_token = result.reset_token;
-           res.message = result.message;
+           json["success"] = result.success;
+           json["message"] = result.message;
 
-           return res;
+           if(result.usecase)
+           {
+              json["usecase"] = *result.usecase;
+           }
+           if(result.reset_token)
+           {
+              json["reset_token"] = *result.reset_token;
+           }
+
+           return crow::response(200,json);
      });
      CROW_ROUTE(app, "/verify-otp").methods("POST"_method)([&RedisManager](const crow::request& req)
      {
@@ -57,14 +64,21 @@ void register_Otp_Routes(crow::SimpleApp& app,RedisManager& RedisManager)
 
         VerifyOtpResult result = verifyOTP(email, otp, RedisManager);
 
-        crow::response res;
-            
-        res.success = result.success;
-        res.message= result.message;
-        res.usecase = result.usecase;
-        res.reset_token = result.reset_token;    
-            
-        return res;
+        crow::json::wvalue json;
+
+           json["success"] = result.success;
+           json["message"] = result.message;
+
+           if(result.usecase)
+           {
+              json["usecase"] = *result.usecase;
+           }
+           if(result.reset_token)
+           {
+              json["reset_token"] = *result.reset_token;
+           }
+
+           return crow::response(200,json);
     });
 }
 

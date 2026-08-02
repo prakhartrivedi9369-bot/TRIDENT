@@ -41,7 +41,8 @@ class RedisManager
 
           VerifyOtpResult verifyOtp(
             const string &email,
-            const string &enteredOTP
+            const string &enteredOTP,
+            RedisManager& RedisManager
           );
 
           bool deleteOTP(
@@ -73,6 +74,7 @@ class RedisManager
           );
 
           string Reset_token_check(
-            const string& reset_token
+            const string& reset_token,
+            RedisManager& RedisManager
           );
 };

@@ -5,6 +5,7 @@
 #include "JWT_token.h"
 #include "Logger.h"
 #include "Redis.h"
+#include <sw/redis++/redis++.h>
 
 using namespace std;
 
@@ -19,12 +20,12 @@ string generate_reset_token()
     {
         ss << hex
            << setw(2)
-           << setfill('0')
+           << setfill('0');
         static_cast<int>(buffer[i]);
     }
     return ss.str();
 }
-string Reset_token_check(const string& reset_token)
+string RedisManager::Reset_token_check(const string& reset_token,RedisManager& RedisManager)
 {
     try
     {

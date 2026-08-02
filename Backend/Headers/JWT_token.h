@@ -9,5 +9,6 @@ namespace AuthUtils {
     string create_jwt_token(const string& user_id);
     string verify_jwt_token(const string& token);
     string build_auth_cookie(const string& token);
-    string generate_reset_token();
 }
+
+string generate_reset_token();
