@@ -23,7 +23,7 @@ void register_Otp_Routes(crow::SimpleApp& app,RedisManager& RedisManager)
 
            stringstream buffer;
            buffer << file.rdbuf();
-
+           
            return crow::response (buffer.str());
      });
      CROW_ROUTE(app, "/send-otp").methods("POST"_method)([&RedisManager](const crow::request& req)

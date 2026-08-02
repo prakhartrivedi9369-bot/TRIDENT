@@ -65,14 +65,15 @@ void Pass_reset(const crow::request& req,crow::response& res,RedisManager& Redis
      auto json_data = crow::json::load(req.body);
      string new_password = json_data["confirmPassword"].s();
      string reset_token = json_data["reset_token"].s();
-     string IP=req.remote_ip_address;
+  //   string IP=req.remote_ip_address;
+  // !json_data.has("new_password")
 
         try
         {
-            if(!json_data || !json_data.has("email") || !json_data.has("password"))
+            if(!json_data)
             {
                 res.code = 400; //Bad request
-                res.body = "{\"error\": \"Email and password required\"}";
+                res.body = "{\"error\": \"password required\"}";
           //      saveLogInDB(LogEntry::DETAILS_MISSING,IP,email);
                 return;
             }
