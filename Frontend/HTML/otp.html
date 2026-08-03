@@ -497,8 +497,10 @@ form.addEventListener("submit", async (e) => {
 
         alert(result.message);
 
-        if (result.success) {
-
+        if (result.success)
+        {
+            if(result.usecase == "FORGET_PASSWORD")
+            {
             verifyBtn.disabled = false;
 
             sessionStorage.setItem(
@@ -509,6 +511,35 @@ form.addEventListener("submit", async (e) => {
             window.location.href = "/Pass_reset";
 
             return;
+            }
+
+            if(result.usecase == "LOGIN")
+            {
+                verifyBtn.disabled = false;
+
+                sessionStorage.setItem(
+                "reset_token",
+                result.reset_token
+                );
+            
+            window.location.href = "/Front_page";
+
+            return; 
+            }
+
+            if(result.usecase == "SIGNUP")
+            {
+                verifyBtn.disabled = false;
+
+                sessionStorage.setItem(
+                "reset_token",
+                result.reset_token
+                );
+            
+            window.location.href = "/Front_page";
+
+            return; 
+            }
         }
 
         if (result.code === "WRONG_OTP") {

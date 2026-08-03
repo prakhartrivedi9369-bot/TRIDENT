@@ -30,6 +30,7 @@ add_executable(my_app
                Redis/OTP.cpp
                Redis/Redis_Start.cpp
                Redis/Reset_Pass.cpp
+               Routes/Protected/Front_Route.cpp
                Routes/Public/Forget_Route.cpp
                Routes/Public/Home_Route.cpp
                Routes/Public/Login_Route.cpp

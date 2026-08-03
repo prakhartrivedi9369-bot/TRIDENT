@@ -518,7 +518,7 @@ async function handleRecovery(event) {
 
                 // Store for OTP page
                 localStorage.setItem("userEmail", email);
-                sessionStorage.setItem("usecase", usecase);
+              //  sessionStorage.setItem("usecase", usecase);
 
                 try {
 
@@ -529,7 +529,7 @@ async function handleRecovery(event) {
                         },
                         body: JSON.stringify({
                             email: email,
-                            usecase: usecase
+                            usecase: "FORGET_PASSWORD"
                         })
                     });
 

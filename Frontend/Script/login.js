@@ -85,27 +85,26 @@ async function handleLogin(event) {
             submitBtn.innerHTML =
                 '<span>Success <i class="fa-solid fa-check"></i></span>';
 
+            setTimeout(async () => {
 
-            // Small delay for animation
-            setTimeout(() => {
-                // Redirect to OTP page
-                localStorage.setItem("userEmail", email);
-                window.location.href = "/otp";
+                  localStorage.setItem("userEmail", email);
+
+    await fetch('/send-otp', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            email,
+            usecase: "LOGIN"
+        })
+    });
+
+    alert("OTP sent");
+    window.location.href="/otp";
+
 
             }, 1000);
-
-              // Call send-otp route
-             await fetch('/send-otp', {
-             method: 'POST',
-             headers: {
-                       'Content-Type': 'application/json'
-                      },
-                      body: JSON.stringify({
-                      email: email
-                   })
-             });
-
-            alert("OTP sent to registered email successfully");
         }
          else
              {
