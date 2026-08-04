@@ -58,15 +58,13 @@ void handle_forget(const crow::request& req, crow::response& res)
 
 void Pass_reset(const crow::request& req,crow::response& res,RedisManager& RedisManager)
 {
-     //Crow mai response headers ko JSON set kar dete hain
      res.set_header("Content-Type", "application/json");
 
      // 1. Request body ko JSON mai parse karna
      auto json_data = crow::json::load(req.body);
      string new_password = json_data["confirmPassword"].s();
      string reset_token = json_data["reset_token"].s();
-  //   string IP=req.remote_ip_address;
-  // !json_data.has("new_password")
+     string IP=req.remote_ip_address;
 
         try
         {
@@ -74,7 +72,6 @@ void Pass_reset(const crow::request& req,crow::response& res,RedisManager& Redis
             {
                 res.code = 400; //Bad request
                 res.body = "{\"error\": \"password required\"}";
-          //      saveLogInDB(LogEntry::DETAILS_MISSING,IP,email);
                 return;
             }
         
@@ -82,31 +79,26 @@ void Pass_reset(const crow::request& req,crow::response& res,RedisManager& Redis
                 // 3.Response Generation (If-Else logic)
                 if(Pass_reset_status == 1)
                 {
-             //        saveLogInDB(LogEntry::PASSWORD_RESET,IP,email);
                      res.code = 201;
                      res.body = "{\"status\": \"Success\",""\"message\": \"Password reset successful!\"}";
                 }
                 else if(Pass_reset_status == 0)
                 {
-           //          saveLogInDB(LogEntry::PASSWORD_RESET_TOKEN_EXPIRED,IP,email);
                      res.code = 401;
                      res.body = "{\"status\": \"fail\",""\"message\": \"PASSWORD_RESET_TOKEN_EXPIRED\"}";
                 }
                 else if(Pass_reset_status == -1)
                 {
-          //           saveLogInDB(LogEntry::INVALID_PASSWORD,IP,email);
                      res.code = 404;
                      res.body = "{\"status\":\"fail\",""\"message\": \"REDIS_ERROR\"}";
                 }
                 else if(Pass_reset_status==-2)
                 {
-           //          saveLogInDB(LogEntry::DB_CONNECTION_ISSUE,IP,email);
                      res.code = 429;
                      res.body = "{\"status\":\"fail\",\"message\":\"Database error\"}";
                 }
                 else
                 {
-            //        saveLogInDB(LogEntry::SERVER_ERROR,IP,email);
                      res.code = 500;
                      res.body = "{\"status\":\"error\",\"message\":\"Server connection issue.\"}";
                 }
@@ -114,7 +106,6 @@ void Pass_reset(const crow::request& req,crow::response& res,RedisManager& Redis
         catch(const std::exception& e)
         {
             //Agar database down hua ya koei aur crash hua toh server nahi rukega
-       //     saveLogInDB(LogEntry::SERVER_ERROR,IP,email);
             res.code = 500;
             res.body = "{\"status\": \"error\", \"error\": \"Internal Server Error. Database connectivity issue.\"}";
         }

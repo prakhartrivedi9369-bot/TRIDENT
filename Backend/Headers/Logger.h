@@ -3,8 +3,18 @@
 #define LOGIN_H
 
 #include "crow.h" // Crow framework include karna zaroori hai
+#include <queue>
+#include <mutex>
+#include <condition_variable>
+#include <string>
 
 using namespace std;
+
+queue<LogData> logQueue;
+
+mutex queueMutex;
+
+condition_variable cv;
 
 enum class LogEntry
 {
@@ -33,6 +43,21 @@ enum class LogEntry
      PASSWORD_RESET,
 
      PASSWORD_RESET_TOKEN_EXPIRED
+};
+
+struct LogData
+{
+     string event;
+
+     string email;
+     
+     string ip;
+
+     string response;
+
+     int status_code;
+
+     string timestamp;
 };
 
 
