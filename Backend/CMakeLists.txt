@@ -7,6 +7,10 @@ set(CMAKE_CXX_STANDARD 17)
 add_compile_definitions(ASIO_STANDALONE)
 add_compile_definitions(CROW_ENABLE_SSL=OFF)
 
+#SQLite 
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(SQLITE3 REQUIRED sqlite3)
+
 #---------------------------------------------------------------------------------------
 # 1. Executable and includes(Headers ka raasta)
 #---------------------------------------------------------------------------------------
@@ -22,10 +26,11 @@ add_subdirectory(External/Crow)
 # Apne main executable ko define karein
 add_executable(my_app 
                main.cpp 
-               Database_check/forget_auth.cpp
-               Database_check/login_auth.cpp 
-               Database_check/Logs_auth.cpp
-               Database_check/signup_auth.cpp        
+               SQLite/SQLite.cpp
+               MongoDB/forget_auth.cpp
+               MongoDB/login_auth.cpp 
+               MongoDB/Logs_auth.cpp
+               MongoDB/signup_auth.cpp        
                Redis/AttemptManager.cpp
                Redis/OTP.cpp
                Redis/Redis_Start.cpp
@@ -53,8 +58,9 @@ target_include_directories(my_app PRIVATE
             ${CMAKE_SOURCE_DIR}/External/jwt-cpp/include/jwt-cpp
             ${CMAKE_SOURCE_DIR}/External/jwt-cpp/include
             /usr/include
-            /usr/include/mongoc-2.3.0
-            /usr/include/bson-2.3.0
+            /usr/include/mongoc-2.3.2
+            /usr/include/bson-2.3.2
+            ${SQLITE3_INCLUDE_DIRS}
 )
 
 target_compile_definitions(my_app 
@@ -66,6 +72,7 @@ PRIVATE
 # 3. Linking Libraries (Crow, Boost, Windows Networking, & MongoDB C Driver)
 #----------------------------------------------------------------------------------------
 target_link_libraries(my_app PRIVATE
+    ${SQLITE3_LIBRARIES}
     Crow::Crow
     sodium
     mongoc2

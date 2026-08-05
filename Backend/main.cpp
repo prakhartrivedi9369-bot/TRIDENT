@@ -4,6 +4,7 @@
 #include "env_config.h"
 #include "crypto_utils.h"
 #include "Redis.h"
+#include "SQLite.h"
 
 using namespace std;
 
@@ -17,12 +18,16 @@ int main()
 
      init_database();  
 
+     if(!initSQLite()) return 1;
+
      crow::SimpleApp app;
 
      registerRoutes(app,RedisManager);
      
      //Server start
      app.port(18080).multithreaded().run();
+
+     closeSQLite();
 
      // Server band hone par safely cleanup karo
      cleanup_database();
