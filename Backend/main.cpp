@@ -5,6 +5,7 @@
 #include "crypto_utils.h"
 #include "Redis.h"
 #include "SQLite.h"
+#include "Tables.h"
 
 using namespace std;
 
@@ -19,6 +20,35 @@ int main()
      init_database();  
 
      if(!initSQLite()) return 1;
+
+     Table auditTable("audit_logs.db");
+
+    if (!auditTable.initialize())
+    {
+        std::cerr << "Audit database initialization failed."
+                  << std::endl;
+
+        return 1;
+    }
+
+    AuditLog testLog;
+
+    testLog.event = AuditEvent::LOGIN;
+    testLog.email = "test@gmail.com";
+    testLog.ip_address = "127.0.0.1";
+    testLog.status = AuditStatus::SUCCESS;
+    testLog.timestamp = "2026-08-06 11:30:00";
+
+    if (auditTable.insert(testLog))
+    {
+        std::cout << "Test audit log inserted successfully."
+                  << std::endl;
+    }
+    else
+    {
+        std::cerr << "Failed to insert test audit log."
+                  << std::endl;
+    }
 
      crow::SimpleApp app;
 

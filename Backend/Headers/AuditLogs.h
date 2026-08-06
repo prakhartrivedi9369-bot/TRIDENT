@@ -21,7 +21,10 @@ enum class AuditEvent
 
     RATE_LIMIT_BLOCK,
 
-    UNKNOWN
+    UNKNOWN,
+
+    LOGIN,
+    SIGNUP
 };
 
 enum class AuditStatus

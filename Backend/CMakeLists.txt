@@ -27,6 +27,8 @@ add_subdirectory(External/Crow)
 add_executable(my_app 
                main.cpp 
                SQLite/SQLite.cpp
+               SQLite/AuditLogs.cpp
+               SQLite/Tables.cpp
                MongoDB/forget_auth.cpp
                MongoDB/login_auth.cpp 
                MongoDB/Logs_auth.cpp
