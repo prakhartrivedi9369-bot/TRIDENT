@@ -47,6 +47,7 @@ Current implementation progress:
 | Redis Integration      | ✅ Complete        |
 | Login Attempt Limiting | ✅ Complete        |
 | JWT Generation         | ✅ Complete        |
+| SQLite3 Integration    | ✅ Complete        |
 | Logging System         | ✅ Complete        |
 | Trading Engine         | 🚧 Planned        |
 | Portfolio System       | 🚧 Planned        |
@@ -176,6 +177,7 @@ The application uses **Brevo REST API** for:
 | Web Framework    | Crow                      |
 | Database         | MongoDB                   |
 | Cache            | Redis                     |
+| Logs             | SQLite3                   |
 | JWT              | jwt-cpp                   |
 | Password Hashing | Argon2id (Libsodium)      |
 | Email Service    | Brevo REST API            |
@@ -235,6 +237,7 @@ Examples include:
 * Environment Configuration
 * Logging
 * Route Management
+* SQLite
 
 This separation keeps the codebase maintainable as new features are added.
 
@@ -283,6 +286,12 @@ Authentication follows multiple verification stages instead of relying only on u
                   ▼
 
       Verify Credentials (MongoDB)
+                  
+                  │
+
+                  ▼
+
+      Logs save in MongDB asynchronasally
 
                   │
 
@@ -523,6 +532,7 @@ This mechanism significantly reduces repeated unauthorized login attempts while 
 * Login Attempt Limiting
 * Logging
 * MongoDB Integration
+* Logs storage
 
 ---
 
@@ -540,11 +550,11 @@ The application follows a modular architecture where every major component has a
                         │    Crow Web Server  │
                         └─────────────────────┘
                                    │
-        ┌──────────────┬────────────┼─────────────┬──────────────┐
-        ▼              ▼            ▼             ▼              ▼
- Authentication      JWT         Redis        MongoDB        Logging
-        │              │            │             │              │
-        └──────────────┴────────────┴─────────────┴──────────────┘
+        ┌──────────────┬────────────┼─────────────┬──────────────┬─────────┐
+        ▼              ▼            ▼             ▼              ▼         ▼
+ Authentication      JWT         Redis        MongoDB        Logging     SQLite
+        │              │            │             │              │         │
+        └──────────────┴────────────┴─────────────┴──────────────┴─────────┘
                                    │
                             Business Logic
 ```
