@@ -15,7 +15,6 @@ void handle_forget(const crow::request& req, crow::response& res)
     ("Content-Type","application/json");
     auto json_data = crow::json::load(req.body);
     string email = json_data["email"].s();
-    string IP=req.remote_ip_address;
 
     try
     {
@@ -23,7 +22,6 @@ void handle_forget(const crow::request& req, crow::response& res)
          {
             res.code = 400;
             res.body= "{\"error\":\"username,email,password required\"}";
-            saveLogInDB(LogEntry::DETAILS_MISSING,IP,email);
             return;
          }
 
@@ -31,26 +29,22 @@ void handle_forget(const crow::request& req, crow::response& res)
 
          if(forget_status == 1)
          {
-            saveLogInDB(LogEntry::FORGET_PASSWORD,IP,email);
             res.code = 200;
             res.body = "{\"status\":\"otp_required\",""\"message\":\"OTP sent to email\"}";
          }
          else if(forget_status == 0)
          {
-             saveLogInDB(LogEntry::USER_NOT_FOUND,IP,email);
              res.code = 409;
              res.body = "{\"status\":\"fail\",""\"message\":\"No user found!\"}";
          }
          else
          {
-            saveLogInDB(LogEntry::DB_CONNECTION_ISSUE,IP,email);
             res.code = 500;
             res.body = "{\"status\":\"fail\",""\"error\":\"Database error\"}";
          }
     }
     catch(const exception& e)
     {
-          saveLogInDB(LogEntry::SERVER_ERROR,IP,email);
           res.code = 500;
           res.body = "{\"status\":\"fail\",""\"error\":\"Internal server error\"}";
     }
@@ -64,7 +58,6 @@ void Pass_reset(const crow::request& req,crow::response& res,RedisManager& Redis
      auto json_data = crow::json::load(req.body);
      string new_password = json_data["confirmPassword"].s();
      string reset_token = json_data["reset_token"].s();
-     string IP=req.remote_ip_address;
 
         try
         {
