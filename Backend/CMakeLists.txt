@@ -26,6 +26,7 @@ add_subdirectory(External/Crow)
 # Apne main executable ko define karein
 add_executable(my_app 
                main.cpp 
+               SQLite/AuditLogger.cpp
                SQLite/SQLite.cpp
                SQLite/AuditLogs.cpp
                SQLite/Tables.cpp

@@ -42,6 +42,7 @@ bool Table::initialize()
                             email TEXT,
                             ip_address TEXT,
                             status TEXT,
+                            Reason TEXT,
                             timestamp TEXT
                         );
                     )";
@@ -94,6 +95,7 @@ bool Table::insert(const AuditLog& log)
             email,
             ip_address,
             status,
+            Reason,
             timestamp
         )
         VALUES (?, ?, ?, ?, ?);
@@ -118,8 +120,9 @@ bool Table::insert(const AuditLog& log)
         return false;
     }
 
-    const std::string eventString = toString(log.event);
-    const std::string statusString = toString(log.status);
+    const string eventString = toString(log.event);
+    const string statusString = toString(log.status);
+    const string ReasonString = toString(log.Reason);
 
     sqlite3_bind_text(
         statement,
@@ -156,6 +159,14 @@ bool Table::insert(const AuditLog& log)
     sqlite3_bind_text(
         statement,
         5,
+        ReasonString.c_str(),
+        -1,
+        SQLITE_TRANSIENT
+    );
+
+    sqlite3_bind_text(
+        statement,
+        6,
         log.timestamp.c_str(),
         -1,
         SQLITE_TRANSIENT

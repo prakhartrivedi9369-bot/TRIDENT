@@ -25,7 +25,6 @@ void handleLogin(const crow::request& req, crow::response& res,RedisManager &Red
             {
                 res.code = 400; //Bad request
                 res.body = "{\"error\": \"Email and password required\"}";
-                AuditLogger()
                 return;
             }
 
@@ -36,6 +35,7 @@ void handleLogin(const crow::request& req, crow::response& res,RedisManager &Red
                 if(Attempt_status == 1)
                 {
                      res.code = 201;
+                     AuditLogger::logLoginSuccess(email,IP);
                      res.body = "{\"status\": \"otp_required\",""\"message\": \"Login successful!\"}";
                 }
                 else if(Attempt_status == 0)
@@ -46,6 +46,7 @@ void handleLogin(const crow::request& req, crow::response& res,RedisManager &Red
                 else if(Attempt_status == 2)
                 {
                      res.code = 404;
+                     AuditLogger.logLoginFailure(email,IP);
                      res.body = "{\"status\":\"Invalid_pass\"}";
                 }
                 else if(Attempt_status==3)

@@ -7,20 +7,32 @@
 #include "SQLite.h"
 #include "Tables.h"
 #include "AuditLogs.h"
+#include "AuditLogger.h"
 
 using namespace std;
 
 int main()
 {
+     // .env load
      loadEnv("../.env");
 
+     // Redis initialization
      RedisManager RedisManager(getEnvValue("REDIS_URI"));
 
+     //Argon2id initialization
      CryptoUtils::init();
 
+     //MongoDB initialization
      init_database();  
 
+     //SQLite3 initialization
      initSQLite();
+
+     Table auditTable("../SQLite/data/audit_logs.db");
+
+     auditTable.initialize();
+
+     AuditLogger logger(auditTable);
 
      crow::SimpleApp app;
 

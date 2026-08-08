@@ -3,31 +3,61 @@
 #include "AuditLogs.h"
 #include "crow.h"
 #include "AuditLogger.h"
+#include <chrono>
+#include <ctime>
+#include <iomanip>
+#include <sstream>
     
 using namespace std;
 
-void AuditLogger(AuditEvent event,const string &email,const string &IP,Audit,const string &timestamp)
+string getCurrentTimestamp()
 {
-    Table auditTable("../SQLite/Data/audit_logs.db");
+    auto now = std::chrono::system_clock::now();
 
-    auditTable.initialize();
-    AuditLog testLog;
+    std::time_t currentTime =
+        std::chrono::system_clock::to_time_t(now);
 
-    testLog.email = email;
-    testLog.ip_address = IP;
-    testLog.timestamp = timestamp;
+    std::tm localTime{};
 
-    testLog.event = AuditEvent::event;
-    testLog.status = AuditStatus::status;
+    localtime_r(&currentTime, &localTime);
 
-    if(auditTable.insert(testLog))
-    {
-        std::cout << "Test audit log inserted successfully."
-                  << std::endl;
-    }
-    else
-    {
-        std::cerr << "Failed to insert test audit log."
-                  << std::endl;
-    }
+    std::ostringstream timestamp;
+
+    timestamp << std::put_time(
+        &localTime,
+        "%Y-%m-%d %H:%M:%S"
+    );
+
+    return timestamp.str();
+}
+
+AuditLogger::AuditLogger(Table& table) : table(table)
+{;}
+
+void AuditLogger::logLoginSuccess(const string& email,const string& ip)
+{
+    AuditLog log;
+
+    log.event = AuditEvent::LOGIN;
+    log.email = email;
+    log.ip_address = ip;
+    log.status = AuditStatus::SUCCESS;
+    log.reason = AuditReason::LOGIN_SUCCESS;
+    log.timestamp = getCurrentTimestamp();
+
+    table.insert(log);
+}
+
+void AuditLogger::logLoginFailure(const string& email,const string& ip)
+{
+    AuditLog log;
+
+    log.event = AuditEvent::LOGIN;
+    log.email = email;
+    log.ip_address = ip;
+    log.status = AuditStatus::FAILED;
+    log.status = AuditReason::INVALID_PASSWORD;
+    log.timestamp = getCurrentTimestamp();
+
+    table.insert(log);
 }
