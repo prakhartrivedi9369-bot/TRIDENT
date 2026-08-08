@@ -28,15 +28,15 @@ int main()
      //SQLite3 initialization
      initSQLite();
 
-     Table auditTable("../SQLite/data/audit_logs.db");
+     Table auditTable("../SQLite/Data/audit_logs.db");
 
      auditTable.initialize();
 
-     AuditLogger logger(auditTable);
+     AuditLogger AuditLogger(auditTable);
 
      crow::SimpleApp app;
 
-     registerRoutes(app,RedisManager);
+     registerRoutes(app,RedisManager,AuditLogger);
      
      //Server start
      app.port(18080).multithreaded().run();

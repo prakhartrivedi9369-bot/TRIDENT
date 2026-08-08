@@ -7,12 +7,13 @@
 #include <string>
 #include <iostream>
 #include "Redis.h"
+#include "AuditLogger.h"
 
 using namespace std;
 
 string generateOTP();
-VerifyOtpResult sendEmail(const string&  recipient,const string& otp,RedisManager& RedisManager,const string &usecase);
-VerifyOtpResult verifyOTP(const string& email,const string& enteredOtp,RedisManager& RedisManager);
+VerifyOtpResult sendEmail(const string&  recipient,const string& otp,RedisManager& RedisManager,const string &usecase,AuditLogger &AuditLogger);
+VerifyOtpResult verifyOTP(const string& email,const string& enteredOtp,RedisManager& RedisManager,AuditLogger &AuditLogger);
 
 static size_t WriteCallback(
     void* contents,
@@ -36,19 +37,37 @@ string generateOTP()
     return to_string(dist(gen));
 }
 
-VerifyOtpResult verifyOTP(const string& email,const string& enteredOtp, RedisManager& RedisManager)
+VerifyOtpResult verifyOTP(const string& email,const string& enteredOtp, RedisManager& RedisManager,AuditLogger &AuditLogger)
 {
+    string IP=req.remote_ip_address;
+
     VerifyOtpResult result = RedisManager.verifyOtp(email,enteredOtp,RedisManager);
+
+    if(result.message == "OTP EXPIRED")
+       AuditLogger.logOtpSentFailure(email,IP,"OTP EXPIRED");
+
+    if(result.message == "OTP_VERIFIED")
+       AuditLogger.logOtpSentSuccess(email,IP,"OTP_VERIFIED");
+
+    if(result.message == "WRONG_OTP")
+       AuditLogger.logOtpSentFailure(email,IP,"WRONG_OTP");
+
+    if(result.message == "Redis Error")
+       AuditLogger.logOtpSentFailure(email,IP,"Redis Error");
 
     return result;
 }
-VerifyOtpResult sendEmail(const string& recipient,const string& otp, RedisManager& RedisManager, const string &usecase)
+VerifyOtpResult sendEmail(const string& recipient,const string& otp, RedisManager& RedisManager, const string &usecase,AuditLogger &AuditLogger)
 {
+    string IP=req.remote_ip_address;
     if(RedisManager.storeOtp(recipient,otp,120,usecase))
     {
+        AuditLogger.logOtpSentSuccess(recipient,IP,"Otp stored successfully");
         cout<<"OTP stored in Redis successFully! " << endl;
     }
-    else{
+    else
+    {
+        AuditLogger.logOtpSentFailure(recipient,IP,"Otp storing failed");
         cout << "OTP store in Redis failed " << endl;
     }
 
@@ -157,10 +176,12 @@ VerifyOtpResult sendEmail(const string& recipient,const string& otp, RedisManage
 
     if(res != CURLE_OK)
     {
+        AuditLogger.logOtpSentFailure(recipient,IP,"Otp sent failed");
         cerr<<"Request failed! : "<<curl_easy_strerror(res)<<endl;
     }
     else
     {
+        AuditLogger.logOtpSentSuccess(recipient,IP,"Otp sent successfully");
         cout<<"Email request sent successfully"<<endl;
     }
 

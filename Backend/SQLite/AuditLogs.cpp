@@ -41,24 +41,3 @@ string toString(AuditStatus status)
             return "UNKNOWN";
     }
 }
-
-string toString(AuditReason Reason)
-{
-    switch(Reason)
-    {
-        case AuditReason::LOGIN_SUCCESS:
-            return "LOGIN_SUCCESS";
-        
-        case AuditReason::INVALID_PASSWORD:
-            return "INVALID_PASSWORD";
-
-        case AuditReason::DATABASE_CONNECTIVITY_ISSUE:
-            return "DATABASE_CONNECTIVITY_ISSUE";
-
-        case AuditReason::REDIS_ERROR:
-            return "REDIS_ERROR";
-
-        case AuditReason::SERVER_ERROR:
-            return "SERVER_ERROR";
-    }
-}

@@ -11,6 +11,7 @@ enum class AuditEvent
     OTP_VERIFIED,
     OTP_FAILED,
 
+    FORGET_VERIFY,
     PASSWORD_RESET,
 
     RATE_LIMIT_BLOCK,
@@ -30,26 +31,16 @@ enum class AuditStatus
     UNKNOWN
 };
 
-enum class AuditReason
-{
-    LOGIN_SUCCESS,
-    INVALID_PASSWORD,
-    DATABASE_CONNECTIVITY_ISSUE,
-    REDIS_ERROR,
-    SERVER_ERROR
-};
-
 struct AuditLog
 {
     AuditEvent event;
     AuditStatus status;
-    AuditReason Reason;
-
-    std::string email;
-    std::string ip_address;
-    std::string timestamp;
+    
+    string Reason;
+    string email;
+    string ip_address;
+    string timestamp;
 };
 
 string toString(AuditEvent event);
 string toString(AuditStatus status);
-string toString(AuditReason Reason);

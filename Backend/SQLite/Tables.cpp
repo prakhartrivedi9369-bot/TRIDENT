@@ -98,7 +98,7 @@ bool Table::insert(const AuditLog& log)
             Reason,
             timestamp
         )
-        VALUES (?, ?, ?, ?, ?);
+        VALUES (?, ?, ?, ?, ?, ?);
     )";
 
     sqlite3_stmt* statement = nullptr;
@@ -122,7 +122,6 @@ bool Table::insert(const AuditLog& log)
 
     const string eventString = toString(log.event);
     const string statusString = toString(log.status);
-    const string ReasonString = toString(log.Reason);
 
     sqlite3_bind_text(
         statement,

@@ -2,12 +2,13 @@
 #include "crow.h"
 #include "Paths.h"
 #include "database.h"
+#include "AuditLogger.h"
 
 using namespace std;
 
-void handle_signup(const crow::request& req,crow::response& res);
+void handle_signup(const crow::request& req,crow::response& res,AuditLogger &AuditLogger);
 
-void register_Signup_Routes(crow::SimpleApp& app)
+void register_Signup_Routes(crow::SimpleApp& app,AuditLogger &AuditLogger)
 {
      //Signup Route
      CROW_ROUTE(app, "/signup")([]()
@@ -21,10 +22,10 @@ void register_Signup_Routes(crow::SimpleApp& app)
          
          return crow::response(buffer.str());
      });
-     CROW_ROUTE(app, "/api/signup").methods(crow::HTTPMethod::POST)([](const crow::request& req)
+     CROW_ROUTE(app, "/api/signup").methods(crow::HTTPMethod::POST)([&AuditLogger](const crow::request& req)
      {
              crow::response res;
-             handle_signup(req,res);
+             handle_signup(req,res,AuditLogger);
              return res;
      });
 }

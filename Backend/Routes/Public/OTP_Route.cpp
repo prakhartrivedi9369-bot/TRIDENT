@@ -6,14 +6,15 @@
 #include <iostream>
 #include "Redis.h"
 #include "JWT_token.h"
+#include "AuditLogger.h"
 
 using namespace std;
 
 string generateOTP();
-VerifyOtpResult sendEmail(const string&  recipient,const string& otp,RedisManager& RedisManager,const string &usecase);
-VerifyOtpResult verifyOTP(const string& email,const string& enteredOtp,RedisManager& RedisManager);
+VerifyOtpResult sendEmail(const string&  recipient,const string& otp,RedisManager& RedisManager,const string &usecase,AuditLogger &AuditLogger);
+VerifyOtpResult verifyOTP(const string& email,const string& enteredOtp,RedisManager& RedisManager,AuditLogger &AuditLogger);
 
-void register_Otp_Routes(crow::SimpleApp& app,RedisManager& RedisManager)
+void register_Otp_Routes(crow::SimpleApp& app,RedisManager& RedisManager,AuditLogger &AuditLogger)
 {
      CROW_ROUTE(app, "/otp")([]()
      {
@@ -26,7 +27,7 @@ void register_Otp_Routes(crow::SimpleApp& app,RedisManager& RedisManager)
            
            return crow::response (buffer.str());
      });
-     CROW_ROUTE(app, "/send-otp").methods("POST"_method)([&RedisManager](const crow::request& req)
+     CROW_ROUTE(app, "/send-otp").methods("POST"_method)([&RedisManager,&AuditLogger](const crow::request& req)
      {
            auto body = crow::json::load(req.body);
             
@@ -37,7 +38,7 @@ void register_Otp_Routes(crow::SimpleApp& app,RedisManager& RedisManager)
 
            cout<<otp<<endl;
 
-           VerifyOtpResult result = sendEmail(email,otp,RedisManager,usecase);
+           VerifyOtpResult result = sendEmail(email,otp,RedisManager,usecase,AuditLogger);
 
            crow::json::wvalue json;
 
@@ -55,14 +56,14 @@ void register_Otp_Routes(crow::SimpleApp& app,RedisManager& RedisManager)
 
            return crow::response(200,json);
      });
-     CROW_ROUTE(app, "/verify-otp").methods("POST"_method)([&RedisManager](const crow::request& req)
+     CROW_ROUTE(app, "/verify-otp").methods("POST"_method)([&RedisManager,&AuditLogger](const crow::request& req)
      {
         auto body = crow::json::load(req.body);
 
         string email = body["email"].s();
         string otp = body["otp"].s();
 
-        VerifyOtpResult result = verifyOTP(email, otp, RedisManager);
+        VerifyOtpResult result = verifyOTP(email, otp, RedisManager,AuditLogger);
 
         crow::json::wvalue json;
 

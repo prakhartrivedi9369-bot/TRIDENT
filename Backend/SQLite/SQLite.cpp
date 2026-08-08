@@ -9,9 +9,9 @@ sqlite3 *global_sqlite_db = nullptr;
 
 bool initSQLite()
 {
-    filesystem::create_directories(filesystem::path(PROJECT_ROOT) / "SQLite_data");
+    filesystem::create_directories(filesystem::path(PROJECT_ROOT) / "SQLite" / "SQLite_data");
 
-    filesystem::path dbPath = filesystem::path(PROJECT_ROOT) / "SQLite_data" / "SQLite.db";
+    filesystem::path dbPath = filesystem::path(PROJECT_ROOT) / "SQLite" / "SQLite_data" / "SQLite.db";
 
     int rc = sqlite3_open(dbPath.string().c_str(), &global_sqlite_db);
 

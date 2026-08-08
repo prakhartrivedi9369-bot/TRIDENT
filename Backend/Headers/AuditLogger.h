@@ -16,20 +16,40 @@ class AuditLogger
         AuditLogger(Table& table);
 
         void logLoginSuccess(const string& email,
-                         const string& ip);
+                         const string& ip,const string& Reason);
 
         void logLoginFailure(const string& email,
-                         const string& ip);
+                         const string& ip,const string &Reason);
 
-  //      void logSignupSuccess(...);
+        void logSignupSuccess(const string& email,
+                         const string& ip,const string &Reason);
 
-    //    void logSignupFailure(...);
+        void logSignupFailure(const string& email,
+                         const string& ip,const string &Reason);
 
-   //     void logOtpSent(...);
+        void logOtpSentSuccess(const string& email,
+                         const string& ip,const string &Reason);
 
-   //     void logOtpVerified(...);
+        void logOtpSentFailure(const string& email,
+                         const string& ip,const string &Reason);
 
-  //      void logPasswordReset(...);
+        void logOtpVerifiedSuccess(const string& email,
+                         const string& ip,const string &Reason);
+
+        void logOtpVerifiedFailure(const string& email,
+                         const string& ip,const string &Reason);
+
+        void logForgetVerifySuccess(const string& email,
+                         const string& ip,const string &Reason);
+
+        void logForgetVerifyFailure(const string& email,
+                         const string& ip,const string &Reason);
+
+        void logPasswordResetSuccess(const string& email,
+                         const string& ip,const string &Reason);
+
+        void logPasswordResetFailure(const string& email,
+                         const string& ip,const string &Reason);
 };
 
 string getCurrentTimestamp();
