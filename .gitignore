@@ -26,3 +26,7 @@ CPackSourceConfig.cmake
 
 # Secrets
 .env
+
+#Local Database
+Backend/SQLite/Data/audit_logs.db
+Backend/SQLite/SQLite_data/SQLite.db
