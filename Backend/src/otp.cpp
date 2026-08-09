@@ -37,10 +37,8 @@ string generateOTP()
     return to_string(dist(gen));
 }
 
-VerifyOtpResult verifyOTP(const string& email,const string& enteredOtp, RedisManager& RedisManager,AuditLogger &AuditLogger)
+VerifyOtpResult verifyOTP(const string& email,const string& enteredOtp, RedisManager& RedisManager,AuditLogger &AuditLogger,const string &IP)
 {
-    string IP=req.remote_ip_address;
-
     VerifyOtpResult result = RedisManager.verifyOtp(email,enteredOtp,RedisManager);
 
     if(result.message == "OTP EXPIRED")
@@ -57,9 +55,8 @@ VerifyOtpResult verifyOTP(const string& email,const string& enteredOtp, RedisMan
 
     return result;
 }
-VerifyOtpResult sendEmail(const string& recipient,const string& otp, RedisManager& RedisManager, const string &usecase,AuditLogger &AuditLogger)
+VerifyOtpResult sendEmail(const string& recipient,const string& otp, RedisManager& RedisManager, const string &usecase,AuditLogger &AuditLogger,const string &IP)
 {
-    string IP=req.remote_ip_address;
     if(RedisManager.storeOtp(recipient,otp,120,usecase))
     {
         AuditLogger.logOtpSentSuccess(recipient,IP,"Otp stored successfully");

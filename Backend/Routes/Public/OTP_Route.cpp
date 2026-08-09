@@ -11,8 +11,8 @@
 using namespace std;
 
 string generateOTP();
-VerifyOtpResult sendEmail(const string&  recipient,const string& otp,RedisManager& RedisManager,const string &usecase,AuditLogger &AuditLogger);
-VerifyOtpResult verifyOTP(const string& email,const string& enteredOtp,RedisManager& RedisManager,AuditLogger &AuditLogger);
+VerifyOtpResult sendEmail(const string&  recipient,const string& otp,RedisManager& RedisManager,const string &usecase,AuditLogger &AuditLogger,const string &IP);
+VerifyOtpResult verifyOTP(const string& email,const string& enteredOtp,RedisManager& RedisManager,AuditLogger &AuditLogger,const string &IP);
 
 void register_Otp_Routes(crow::SimpleApp& app,RedisManager& RedisManager,AuditLogger &AuditLogger)
 {
@@ -29,6 +29,8 @@ void register_Otp_Routes(crow::SimpleApp& app,RedisManager& RedisManager,AuditLo
      });
      CROW_ROUTE(app, "/send-otp").methods("POST"_method)([&RedisManager,&AuditLogger](const crow::request& req)
      {
+           string IP=req.remote_ip_address;
+
            auto body = crow::json::load(req.body);
             
            string email = body["email"].s();
@@ -38,7 +40,7 @@ void register_Otp_Routes(crow::SimpleApp& app,RedisManager& RedisManager,AuditLo
 
            cout<<otp<<endl;
 
-           VerifyOtpResult result = sendEmail(email,otp,RedisManager,usecase,AuditLogger);
+           VerifyOtpResult result = sendEmail(email,otp,RedisManager,usecase,AuditLogger,IP);
 
            crow::json::wvalue json;
 
@@ -58,12 +60,14 @@ void register_Otp_Routes(crow::SimpleApp& app,RedisManager& RedisManager,AuditLo
      });
      CROW_ROUTE(app, "/verify-otp").methods("POST"_method)([&RedisManager,&AuditLogger](const crow::request& req)
      {
+        string IP=req.remote_ip_address;
+
         auto body = crow::json::load(req.body);
 
         string email = body["email"].s();
         string otp = body["otp"].s();
 
-        VerifyOtpResult result = verifyOTP(email, otp, RedisManager,AuditLogger);
+        VerifyOtpResult result = verifyOTP(email, otp, RedisManager,AuditLogger,IP);
 
         crow::json::wvalue json;
 

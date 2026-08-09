@@ -56,7 +56,7 @@ void AuditLogger::logLoginFailure(const string& email,const string& ip,const str
     log.email = email;
     log.ip_address = ip;
     log.status = AuditStatus::FAILED;
-    log.Reason = Reason
+    log.Reason = Reason;
     log.timestamp = getCurrentTimestamp();
 
     table.insert(log);

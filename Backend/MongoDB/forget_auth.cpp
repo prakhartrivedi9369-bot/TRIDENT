@@ -5,6 +5,8 @@
 #include <string>
 #include <iostream>
 #include "Redis.h"
+#include "AuditLogger.h"
+#include "AuditLogs.h"
 
 using namespace std;
 
@@ -43,7 +45,7 @@ int verifyUserInDB(const string& email)
 
      return 1; // ✅ Success
 }
-int New_password(const string& new_password,const string& reset_token,RedisManager& RedisManager)
+int New_password(const string& new_password,const string& reset_token,RedisManager& RedisManager,AuditLogger &AuditLogger,const string &IP)
 {
      string Redis_status = RedisManager.Reset_token_check(reset_token,RedisManager);
 
@@ -84,6 +86,7 @@ int New_password(const string& new_password,const string& reset_token,RedisManag
 
     if(!success)
     {
+       AuditLogger.logPasswordResetFailure(Redis_status,IP,"Database_error");
        bson_destroy(filter);
        bson_destroy(update);
        mongoc_collection_destroy(collection);
@@ -92,6 +95,7 @@ int New_password(const string& new_password,const string& reset_token,RedisManag
     }
     else
     {
+       AuditLogger.logPasswordResetSuccess(Redis_status,IP,"Password Reset Success!");
        bson_destroy(filter);
        bson_destroy(update);
        mongoc_collection_destroy(collection);

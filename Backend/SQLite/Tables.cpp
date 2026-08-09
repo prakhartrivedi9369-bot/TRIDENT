@@ -158,7 +158,7 @@ bool Table::insert(const AuditLog& log)
     sqlite3_bind_text(
         statement,
         5,
-        ReasonString.c_str(),
+        log.Reason.c_str(),
         -1,
         SQLITE_TRANSIENT
     );
