@@ -28,5 +28,5 @@ CPackSourceConfig.cmake
 .env
 
 #Local Database
-Backend/SQLite/Data/audit_logs.db
-Backend/SQLite/SQLite_data/SQLite.db
+/Backend/SQLite/Data/
+/Backend/SQLite/SQLite_data/

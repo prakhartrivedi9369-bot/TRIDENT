@@ -559,7 +559,7 @@ The application follows a modular architecture where every major component has a
                             Business Logic
 ```
 
-The backend is intentionally divided into independent modules so future components such as trading, portfolio management, and real-time market data can be integrated without major architectural changes.
+The backend is intentionally divided into independent modules so future components such as trading, portfolio management, and real-time market data can be integrated without major architectural changes!
 
 ---
 
