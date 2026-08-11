@@ -11,11 +11,11 @@ using namespace std;
 class AuditLogger
 {
     private:
-        Table& table;
         LogQueue& logQueue;
-
+        Table& table;
+        
     public:
-        AuditLogger(Table& table);
+        AuditLogger(Table& table,LogQueue& logQueue);
 
         void logLoginSuccess(const string& email,
                          const string& ip,const string& Reason);

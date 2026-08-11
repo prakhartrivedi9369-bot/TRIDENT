@@ -19,7 +19,7 @@ void init_database();
 void cleanup_database();
 int verifyCredentialsInDB(const string& email, const string& password);
 int createUserInDB(const string& username, const string& email, const string& password);
-void saveLogInDB(AuditLog log);
+bool saveLogInDB(AuditLog log);
 int verifyUserInDB(const string& email);
 int New_password(const string& new_password,const string& reset_token,RedisManager& RedisManager,AuditLogger &AuditLogger,const string &IP);
 

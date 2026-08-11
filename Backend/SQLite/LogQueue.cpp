@@ -1,8 +1,9 @@
 #include "crow.h"
 #include "AuditLogs.h"
 #include <queue>
-#include "LogsQueue.h"
+#include "LogQueue.h"
 #include "database.h"
+#include <chrono>
 
 using namespace std;
 
@@ -17,9 +18,9 @@ void LogQueue::push(const AuditLog& log)
     cv.notify_one();
 }
 
-LogData LogQueue::pop()
+AuditLog LogQueue::pop()
 {
-    std::unique_lock<std::mutex> lock(queueMutex);
+    std::unique_lock<std::mutex> lock(mutex);
 
     cv.wait(lock, [this] {
         return !queue.empty() || !running;
@@ -28,19 +29,32 @@ LogData LogQueue::pop()
     if (!running && queue.empty())
         return {};
 
-    LogData log = std::move(queue.front());
+    AuditLog log = std::move(queue.front());
     queue.pop();
 
     return log;
 }
 
-void LogQueue::process()
+void LogQueue::processLogs()
 {
     while (running)
     {
-        LogData log = pop();
+        AuditLog log = pop();
 
-        // MongoDB mein bhejo
-        saveLogInDB(log);
+        if (!running)
+            break;
+
+        while (running && !saveLogInDB(log))
+        {
+            std::this_thread::sleep_for(
+                std::chrono::seconds(2)
+            );
+        }
     }
+}
+
+void LogQueue::stop()
+{
+    running = false;
+    cv.notify_all();
 }

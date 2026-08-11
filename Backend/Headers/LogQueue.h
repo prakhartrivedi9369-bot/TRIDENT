@@ -13,7 +13,7 @@ class LogQueue
         std::mutex mutex;
         std::condition_variable cv;
 
-        bool running = true;
+        std::atomic<bool> running{true};
 
     public:
         void push(const AuditLog& log);

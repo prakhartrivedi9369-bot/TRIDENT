@@ -26,27 +26,27 @@ int main()
      //MongoDB initialization
      init_database();  
 
-     //SQLite3 initialization
+     //SQLite initialization
      initSQLite();
 
      Table auditTable("../SQLite/Data/audit_logs.db");
-
      auditTable.initialize();
-
-     AuditLogger AuditLogger(auditTable);
 
      LogQueue logQueue;
 
-     std::thread worker(&LogQueue::process,&logQueue);
+     AuditLogger auditLogger(auditTable, logQueue);
 
-     AuditLogger auditLogger(logQueue);
+     std::thread worker(&LogQueue::processLogs, &logQueue);
 
      crow::SimpleApp app;
 
-     registerRoutes(app,RedisManager,AuditLogger);
+     registerRoutes(app,RedisManager,auditLogger);
      
      //Server start
      app.port(18080).multithreaded().run();
+
+     logQueue.stop();
+     worker.join();
 
      closeSQLite();
 

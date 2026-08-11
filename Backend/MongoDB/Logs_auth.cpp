@@ -8,7 +8,7 @@
 
 using namespace std;
 
-void saveLogInDB(AuditLog log)
+bool saveLogInDB(AuditLog log)
 {   
     string status = toString(log.status);
     string event = toString(log.event);
@@ -24,12 +24,20 @@ void saveLogInDB(AuditLog log)
 
     bson_t *ip_query = bson_new_from_json((const uint8_t*)ip_json.c_str(),-1,&error);
     
-    if(!ip_query)
+    if (!ip_query)
     {
-        mongoc_collection_count_documents(collection,ip_query,NULL,NULL,NULL,&error); 
+            mongoc_collection_destroy(collection);
+            return false;
     }
 
     int64_t ip_count = mongoc_collection_count_documents(collection,ip_query,NULL,NULL,NULL,&error);
+    if (ip_count < 0)
+    {
+        bson_destroy(ip_query);
+        mongoc_collection_destroy(collection);
+        return false;
+    }
+
     bson_destroy(ip_query);
 
     bson_t *new_user = BCON_NEW(
@@ -44,7 +52,7 @@ void saveLogInDB(AuditLog log)
     if(!new_user)
     { 
         mongoc_collection_destroy(collection);
-        return; //return -1
+        return false; //return -1
     }
 
     bool inserted = mongoc_collection_insert_one(collection,new_user,NULL,NULL,&error);
@@ -54,7 +62,7 @@ void saveLogInDB(AuditLog log)
 
     if(!inserted)
     {
-        return; //return -1
+        return false; //return -1
     }
-    return; //return 1;
+    return true; //return 1;
 }
