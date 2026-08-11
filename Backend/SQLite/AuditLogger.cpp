@@ -7,6 +7,7 @@
 #include <ctime>
 #include <iomanip>
 #include <sstream>
+#include "LogQueue.h"
     
 using namespace std;
 
@@ -34,6 +35,9 @@ string getCurrentTimestamp()
 AuditLogger::AuditLogger(Table& table) : table(table)
 {;}
 
+AuditLogger::AuditLogger(LogQueue& queue) : logQueue(queue)
+{;}
+
 void AuditLogger::logLoginSuccess(const string& email,const string& ip,const string &Reason)
 {
     AuditLog log;
@@ -46,6 +50,8 @@ void AuditLogger::logLoginSuccess(const string& email,const string& ip,const str
     log.timestamp = getCurrentTimestamp();
 
     table.insert(log);
+
+    LogQueue.push(log);
 }
 
 void AuditLogger::logLoginFailure(const string& email,const string& ip,const string &Reason)

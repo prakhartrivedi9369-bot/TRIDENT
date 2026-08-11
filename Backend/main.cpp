@@ -8,6 +8,7 @@
 #include "Tables.h"
 #include "AuditLogs.h"
 #include "AuditLogger.h"
+#include "LogQueue.h"
 
 using namespace std;
 
@@ -33,6 +34,12 @@ int main()
      auditTable.initialize();
 
      AuditLogger AuditLogger(auditTable);
+
+     LogQueue logQueue;
+
+     std::thread worker(&LogQueue::process,&logQueue);
+
+     AuditLogger auditLogger(logQueue);
 
      crow::SimpleApp app;
 

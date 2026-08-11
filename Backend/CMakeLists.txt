@@ -28,6 +28,7 @@ add_executable(my_app
                main.cpp 
                SQLite/AuditLogger.cpp
                SQLite/SQLite.cpp
+               SQLite/LogQueue.cpp
                SQLite/AuditLogs.cpp
                SQLite/Tables.cpp
                MongoDB/forget_auth.cpp

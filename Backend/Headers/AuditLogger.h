@@ -4,6 +4,7 @@
 #include <string>
 #include "AuditLogger.h"
 #include "Tables.h"
+#include "LogQueue.h"
 
 using namespace std;
 
@@ -11,6 +12,7 @@ class AuditLogger
 {
     private:
         Table& table;
+        LogQueue& logQueue;
 
     public:
         AuditLogger(Table& table);

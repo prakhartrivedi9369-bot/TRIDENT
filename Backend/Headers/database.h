@@ -6,6 +6,7 @@
 #include <string>
 #include "Logger.h"
 #include "Redis.h"
+#include "AuditLogs.h"
 #include "AuditLogger.h"
 
 using namespace std;
@@ -18,7 +19,7 @@ void init_database();
 void cleanup_database();
 int verifyCredentialsInDB(const string& email, const string& password);
 int createUserInDB(const string& username, const string& email, const string& password);
-void saveLogInDB(LogEntry event,const string& ip,const string& email);
+void saveLogInDB(AuditLog log);
 int verifyUserInDB(const string& email);
 int New_password(const string& new_password,const string& reset_token,RedisManager& RedisManager,AuditLogger &AuditLogger,const string &IP);
 
