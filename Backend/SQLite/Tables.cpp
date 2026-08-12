@@ -43,7 +43,8 @@ bool Table::initialize()
                             ip_address TEXT,
                             status TEXT,
                             Reason TEXT,
-                            timestamp TEXT
+                            timestamp TEXT,
+                            synced INTEGER DEFAULT 0
                         );
                     )";
 
@@ -54,7 +55,10 @@ bool Table::initialize()
         sql,
         nullptr,
         nullptr,
-        &errorMessage
+        nullptr,
+        nullptr,
+        &errorMessage,
+        db
     );
 
     if (result != SQLITE_OK)
@@ -96,9 +100,10 @@ bool Table::insert(const AuditLog& log)
             ip_address,
             status,
             Reason,
-            timestamp
+            timestamp,
+            synced
         )
-        VALUES (?, ?, ?, ?, ?, ?);
+        VALUES (?, ?, ?, ?, ?, ?, ?);
     )";
 
     sqlite3_stmt* statement = nullptr;
@@ -107,8 +112,10 @@ bool Table::insert(const AuditLog& log)
         db,
         sql,
         -1,
+        nullptr,
+        nullptr,
         &statement,
-        nullptr
+        0
     );
 
     if (result != SQLITE_OK)
