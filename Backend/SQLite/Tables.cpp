@@ -188,3 +188,49 @@ bool Table::insert(const AuditLog& log)
 
     return true;
 }
+
+bool Table::markAsSynced(int id)
+{
+    const char* sql = R"(
+        UPDATE audit_logs
+        SET synced = 1
+        WHERE id = ?;
+    )";
+
+    sqlite3_stmt* statement = nullptr;
+
+    int result = sqlite3_prepare_v2(
+        db,
+        sql,
+        -1,
+        &statement,
+        nullptr
+    );
+
+    if (result != SQLITE_OK)
+    {
+        std::cerr << "Failed to prepare sync update: "
+                  << sqlite3_errmsg(db)
+                  << std::endl;
+
+        return false;
+    }
+
+    sqlite3_bind_int(statement, 1, id);
+
+    result = sqlite3_step(statement);
+
+    if (result != SQLITE_DONE)
+    {
+        std::cerr << "Failed to update synced status: "
+                  << sqlite3_errmsg(db)
+                  << std::endl;
+
+        sqlite3_finalize(statement);
+        return false;
+    }
+
+    sqlite3_finalize(statement);
+
+    return true;
+}

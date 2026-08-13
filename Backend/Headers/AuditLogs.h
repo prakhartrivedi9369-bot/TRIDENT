@@ -33,6 +33,8 @@ enum class AuditStatus
 
 struct AuditLog
 {
+    int id = 0;
+
     AuditEvent event;
     AuditStatus status;
     

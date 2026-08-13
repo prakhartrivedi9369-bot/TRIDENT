@@ -26,17 +26,17 @@ int main()
      //MongoDB initialization
      init_database();  
 
-     //SQLite initialization
+     // SQLite initialization
      initSQLite();
 
      Table auditTable("../SQLite/Data/audit_logs.db");
      auditTable.initialize();
 
-     LogQueue logQueue;
+     LogQueue logQueue(auditTable);
 
      AuditLogger auditLogger(auditTable, logQueue);
 
-     std::thread worker(&LogQueue::processLogs, &logQueue);
+     std::thread worker(&LogQueue::processLogs,&logQueue);
 
      crow::SimpleApp app;
 

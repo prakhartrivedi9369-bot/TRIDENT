@@ -7,6 +7,9 @@
 
 using namespace std;
 
+LogQueue::LogQueue(Table& table) : table(table)
+{;}
+
 void LogQueue::push(const AuditLog& log)
 {
     {

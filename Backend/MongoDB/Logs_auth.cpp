@@ -5,6 +5,7 @@
 #include <string>
 #include "Logger.h"
 #include "AuditLogs.h"
+#include "Tables.h"
 
 using namespace std;
 
@@ -64,5 +65,7 @@ bool saveLogInDB(AuditLog log)
     {
         return false; //return -1
     }
+
+    Table.markAsSynced(log.id);
     return true; //return 1;
 }
