@@ -55,10 +55,7 @@ bool Table::initialize()
         sql,
         nullptr,
         nullptr,
-        nullptr,
-        nullptr,
-        &errorMessage,
-        db
+        &errorMessage
     );
 
     if (result != SQLITE_OK)
@@ -100,22 +97,19 @@ bool Table::insert(const AuditLog& log)
             ip_address,
             status,
             Reason,
-            timestamp,
-            synced
+            timestamp
         )
-        VALUES (?, ?, ?, ?, ?, ?, ?);
+        VALUES (?, ?, ?, ?, ?, ?);
     )";
 
     sqlite3_stmt* statement = nullptr;
 
     int result = sqlite3_prepare_v2(
-        db,
-        sql,
-        -1,
-        nullptr,
-        nullptr,
-        &statement,
-        0
+                  db,
+                  sql,
+                  -1,
+                  &statement,
+                  nullptr
     );
 
     if (result != SQLITE_OK)
