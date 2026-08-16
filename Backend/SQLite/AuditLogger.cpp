@@ -46,9 +46,10 @@ void AuditLogger::logLoginSuccess(const string& email,const string& ip,const str
     log.Reason = Reason;
     log.timestamp = getCurrentTimestamp();
 
-    table.insert(log);
-
-    logQueue.push(log);
+    if(table.insert(log))
+    {
+        logQueue.push(log);
+    }
 }
 
 void AuditLogger::logLoginFailure(const string& email,const string& ip,const string &Reason)
@@ -62,9 +63,10 @@ void AuditLogger::logLoginFailure(const string& email,const string& ip,const str
     log.Reason = Reason;
     log.timestamp = getCurrentTimestamp();
 
-    table.insert(log);
-
-    logQueue.push(log);
+    if(table.insert(log))
+    {
+        logQueue.push(log);
+    }
 }
 
 void AuditLogger::logSignupSuccess(const string& email,const string& ip,const string &Reason)
@@ -78,9 +80,10 @@ void AuditLogger::logSignupSuccess(const string& email,const string& ip,const st
     log.Reason = Reason;
     log.timestamp = getCurrentTimestamp();
 
-    table.insert(log);
-
-    logQueue.push(log);
+    if(table.insert(log))
+    {
+        logQueue.push(log);
+    }
 }
 
 void AuditLogger::logSignupFailure(const string& email,const string& ip,const string &Reason)
@@ -94,9 +97,10 @@ void AuditLogger::logSignupFailure(const string& email,const string& ip,const st
     log.Reason = Reason;
     log.timestamp = getCurrentTimestamp();
 
-    table.insert(log);
-
-    logQueue.push(log);
+    if(table.insert(log))
+    {
+        logQueue.push(log);
+    }
 }
 
 void AuditLogger::logOtpSentSuccess(const string& email,const string& ip,const string &Reason)
@@ -110,9 +114,10 @@ void AuditLogger::logOtpSentSuccess(const string& email,const string& ip,const s
     log.Reason = Reason;
     log.timestamp = getCurrentTimestamp();
 
-    table.insert(log);
-
-    logQueue.push(log);
+    if(table.insert(log))
+    {
+        logQueue.push(log);
+    }
 }
 
 void AuditLogger::logOtpSentFailure(const string& email,const string& ip,const string &Reason)
@@ -126,9 +131,10 @@ void AuditLogger::logOtpSentFailure(const string& email,const string& ip,const s
     log.Reason = Reason;
     log.timestamp = getCurrentTimestamp();
 
-    table.insert(log);
-
-    logQueue.push(log);
+    if(table.insert(log))
+    {
+        logQueue.push(log);
+    }
 }
 
 void AuditLogger::logOtpVerifiedSuccess(const string& email,const string& ip,const string &Reason)
@@ -142,9 +148,10 @@ void AuditLogger::logOtpVerifiedSuccess(const string& email,const string& ip,con
     log.Reason = Reason;
     log.timestamp = getCurrentTimestamp();
 
-    table.insert(log);
-
-    logQueue.push(log);
+    if(table.insert(log))
+    {
+        logQueue.push(log);
+    }
 }
 
 void AuditLogger::logOtpVerifiedFailure(const string& email,const string& ip,const string &Reason)
@@ -158,9 +165,10 @@ void AuditLogger::logOtpVerifiedFailure(const string& email,const string& ip,con
     log.Reason = Reason;
     log.timestamp = getCurrentTimestamp();
 
-    table.insert(log);
-
-    logQueue.push(log);
+    if(table.insert(log))
+    {
+        logQueue.push(log);
+    }
 }
 
 void AuditLogger::logForgetVerifySuccess(const string& email,const string& ip,const string &Reason)
@@ -174,9 +182,10 @@ void AuditLogger::logForgetVerifySuccess(const string& email,const string& ip,co
     log.Reason = Reason;
     log.timestamp = getCurrentTimestamp();
 
-    table.insert(log);
-
-    logQueue.push(log);
+    if(table.insert(log))
+    {
+        logQueue.push(log);
+    }
 }
 
 void AuditLogger::logForgetVerifyFailure(const string& email,const string& ip,const string &Reason)
@@ -190,9 +199,10 @@ void AuditLogger::logForgetVerifyFailure(const string& email,const string& ip,co
     log.Reason = Reason;
     log.timestamp = getCurrentTimestamp();
 
-    table.insert(log);
-
-    logQueue.push(log);
+    if(table.insert(log))
+    {
+        logQueue.push(log);
+    }
 }
 
 void AuditLogger::logPasswordResetSuccess(const string& email,const string& ip,const string &Reason)
@@ -206,9 +216,10 @@ void AuditLogger::logPasswordResetSuccess(const string& email,const string& ip,c
     log.Reason = Reason;
     log.timestamp = getCurrentTimestamp();
 
-    table.insert(log);
-
-    logQueue.push(log);
+    if(table.insert(log))
+    {
+        logQueue.push(log);
+    }
 }
 
 void AuditLogger::logPasswordResetFailure(const string& email,const string& ip,const string &Reason)
@@ -222,7 +233,8 @@ void AuditLogger::logPasswordResetFailure(const string& email,const string& ip,c
     log.Reason = Reason;
     log.timestamp = getCurrentTimestamp();
 
-    table.insert(log);
-
-    logQueue.push(log);
+    if(table.insert(log))
+    {
+        logQueue.push(log);
+    }
 }

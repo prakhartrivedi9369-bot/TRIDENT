@@ -15,6 +15,7 @@ bool saveLogInDB(AuditLog log)
     string event = toString(log.event);
     string Reason = log.Reason;
     string email = log.email;
+    int id = log.id;
     string ip_address = log.ip_address;
     string timestamp = log.timestamp;
 
@@ -42,6 +43,7 @@ bool saveLogInDB(AuditLog log)
     bson_destroy(ip_query);
 
     bson_t *new_user = BCON_NEW(
+    "ID",        BCON_INT32(id),
     "Event",     BCON_UTF8(event.c_str()),
     "IP_Address",BCON_UTF8(ip_address.c_str()),
     "Email",     BCON_UTF8(email.c_str()),
@@ -66,6 +68,5 @@ bool saveLogInDB(AuditLog log)
         return false; //return -1
     }
 
-    Table.markAsSynced(log.id);
     return true; //return 1;
 }

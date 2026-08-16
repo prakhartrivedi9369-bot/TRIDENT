@@ -14,6 +14,8 @@ class Table
        ~Table();
 
         bool initialize();
-        bool insert(const AuditLog& log);
+        bool insert(AuditLog& log);
         bool markAsSynced(int id);
+        bool deleteSyncedLogs();
+        void cleanupWorker();
 };

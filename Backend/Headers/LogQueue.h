@@ -16,13 +16,14 @@ class LogQueue
 
         std::atomic<bool> running{true};
 
-        Table& table;
+        Table& auditTable;
 
     public:
         void push(const AuditLog& log);
         AuditLog pop();
 
-        LogQueue(Table& table);
+        LogQueue(Table& table) : auditTable(table)
+        {}
 
         void processLogs();
 

@@ -7,8 +7,7 @@
 
 using namespace std;
 
-LogQueue::LogQueue(Table& table) : table(table)
-{;}
+//LogQueue::LogQueue(Table& table) : table(table) {;}
 
 void LogQueue::push(const AuditLog& log)
 {
@@ -44,15 +43,41 @@ void LogQueue::processLogs()
     {
         AuditLog log = pop();
 
+        if (!pop(log))
+        continue;
+
+        if (!saveLogInDB(log))
+        {
+            std::this_thread::sleep_for(std::chrono::seconds(2));
+            continue;
+        }
+
+    // MongoDB successful
+
         if (!running)
             break;
 
-        while (running && !saveLogInDB(log))
+        while (running)
         {
-            std::this_thread::sleep_for(
-                std::chrono::seconds(2)
-            );
+            if (auditTable.markAsSynced(log.id))
+            {
+               break;
+            }
+            std::this_thread::sleep_for(std::chrono::seconds(1));
         }
+        break;
+    }
+}
+
+void Table::cleanupWorker()
+{
+    while (running)
+    {
+        deleteSyncedLogs();
+
+        std::this_thread::sleep_for(
+            std::chrono::seconds(5)
+        );
     }
 }
 

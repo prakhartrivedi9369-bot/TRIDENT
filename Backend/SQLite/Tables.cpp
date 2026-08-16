@@ -1,5 +1,6 @@
 #include "Tables.h"
 #include <iostream>
+#include "AuditLogs.h"
 
 using namespace std;
 
@@ -80,7 +81,7 @@ bool Table::initialize()
     return true;
 }
 
-bool Table::insert(const AuditLog& log)
+bool Table::insert(AuditLog& log)
 {
     if (db == nullptr)
     {
@@ -184,6 +185,8 @@ bool Table::insert(const AuditLog& log)
         return false;
     }
 
+    log.id = static_cast<int>(sqlite3_last_insert_rowid(db));
+
     sqlite3_finalize(statement);
 
     return true;
@@ -233,4 +236,31 @@ bool Table::markAsSynced(int id)
     sqlite3_finalize(statement);
 
     return true;
+}
+
+bool Table::deleteSyncedLogs()
+{
+    const char* sql =
+        "DELETE FROM audit_logs WHERE synced = 1;";
+
+    sqlite3_stmt* statement = nullptr;
+
+    int rc = sqlite3_prepare_v2(
+        db,
+        sql,
+        -1,
+        &statement,
+        nullptr
+    );
+
+    if (rc != SQLITE_OK)
+    {
+        return false;
+    }
+
+    rc = sqlite3_step(statement);
+
+    sqlite3_finalize(statement);
+
+    return rc == SQLITE_DONE;
 }

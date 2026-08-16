@@ -38,6 +38,8 @@ int main()
 
      std::thread worker(&LogQueue::processLogs,&logQueue);
 
+     std::thread cleanupWorker(&Table::cleanupWorker,&auditTable);
+
      crow::SimpleApp app;
 
      registerRoutes(app,RedisManager,auditLogger);
@@ -46,7 +48,9 @@ int main()
      app.port(18080).multithreaded().run();
 
      logQueue.stop();
+     auditTable.stopcleanup();
      worker.join();
+     cleanupWorker.join();
 
      closeSQLite();
 
