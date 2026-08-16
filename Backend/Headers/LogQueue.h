@@ -11,6 +11,7 @@ class LogQueue
 {
     private:
         std::queue<AuditLog> queue;
+
         std::mutex mutex;
         std::condition_variable cv;
 
@@ -18,14 +19,18 @@ class LogQueue
 
         Table& auditTable;
 
+        //std::thread worker;
+
     public:
+        LogQueue(Table& auditTable);
+
         void push(const AuditLog& log);
         AuditLog pop();
 
-        LogQueue(Table& table) : auditTable(table)
-        {}
-
-        void processLogs();
+        void processLogs(Table& auditTable);
+        void cleanupLogs(Table& auditTable);
 
         void stop();
+
+        ~LogQueue();
 };

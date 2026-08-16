@@ -8,6 +8,7 @@ class Table
 {
     private:
         sqlite3* db;
+        std::atomic<bool> cleanupRunning{true};
 
     public:
         Table(const std::string& dbPath);
@@ -18,4 +19,5 @@ class Table
         bool markAsSynced(int id);
         bool deleteSyncedLogs();
         void cleanupWorker();
+        void cleanupStop();
 };

@@ -219,7 +219,17 @@ bool Table::markAsSynced(int id)
         return false;
     }
 
-    sqlite3_bind_int(statement, 1, id);
+    result = sqlite3_bind_int(statement, 1, id);
+
+    if (result != SQLITE_OK)
+    {
+        std::cerr << "Failed to bind id: "
+                  << sqlite3_errmsg(db)
+                  << std::endl;
+
+        sqlite3_finalize(statement);
+        return false;
+    }
 
     result = sqlite3_step(statement);
 
@@ -233,7 +243,20 @@ bool Table::markAsSynced(int id)
         return false;
     }
 
+    int rowsChanged = sqlite3_changes(db);
+    
     sqlite3_finalize(statement);
+
+    if (rowsChanged == 0)
+    {
+        std::cerr << "No row updated for id = "
+                  << id << std::endl;
+
+        return false;
+    }
+
+    std::cout << "Log id " << id
+              << " marked as synced." << std::endl;
 
     return true;
 }

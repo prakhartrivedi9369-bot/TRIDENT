@@ -9,6 +9,7 @@
 #include "AuditLogs.h"
 #include "AuditLogger.h"
 #include "LogQueue.h"
+#include <functional>
 
 using namespace std;
 
@@ -32,11 +33,11 @@ int main()
      Table auditTable("../SQLite/Data/audit_logs.db");
      auditTable.initialize();
 
-     LogQueue logQueue(auditTable);
+     LogQueue LogQueue(auditTable);
 
-     AuditLogger auditLogger(auditTable, logQueue);
+     AuditLogger auditLogger(auditTable, LogQueue);
 
-     std::thread worker(&LogQueue::processLogs,&logQueue);
+     std::thread worker(&LogQueue::processLogs,&LogQueue,std::ref(auditTable));
 
      std::thread cleanupWorker(&Table::cleanupWorker,&auditTable);
 
@@ -47,8 +48,8 @@ int main()
      //Server start
      app.port(18080).multithreaded().run();
 
-     logQueue.stop();
-     auditTable.stopcleanup();
+     LogQueue.stop();
+     auditTable.cleanupStop();
      worker.join();
      cleanupWorker.join();
 

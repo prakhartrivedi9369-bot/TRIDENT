@@ -7,7 +7,13 @@
 
 using namespace std;
 
-//LogQueue::LogQueue(Table& table) : table(table) {;}
+LogQueue::LogQueue(Table& table) : auditTable(table)
+{;}
+
+LogQueue::~LogQueue()
+{
+    stop();
+}
 
 void LogQueue::push(const AuditLog& log)
 {
@@ -29,7 +35,7 @@ AuditLog LogQueue::pop()
     });
 
     if (!running && queue.empty())
-        return {};
+        return AuditLog{};
 
     AuditLog log = std::move(queue.front());
     queue.pop();
@@ -37,19 +43,18 @@ AuditLog LogQueue::pop()
     return log;
 }
 
-void LogQueue::processLogs()
+void LogQueue::processLogs(Table& auditTable)
 {
     while (running)
     {
         AuditLog log = pop();
 
-        if (!pop(log))
-        continue;
+        if (!running && log.id == 0)
+            break;
 
-        if (!saveLogInDB(log))
+        if (saveLogInDB(log))
         {
             std::this_thread::sleep_for(std::chrono::seconds(2));
-            continue;
         }
 
     // MongoDB successful
@@ -65,15 +70,21 @@ void LogQueue::processLogs()
             }
             std::this_thread::sleep_for(std::chrono::seconds(1));
         }
-        break;
     }
 }
 
 void Table::cleanupWorker()
 {
-    while (running)
+    while (cleanupRunning)
     {
-        deleteSyncedLogs();
+        if (!deleteSyncedLogs())
+        {
+            std::this_thread::sleep_for(
+                std::chrono::seconds(1)
+            );
+
+            continue;
+        }
 
         std::this_thread::sleep_for(
             std::chrono::seconds(5)
@@ -81,8 +92,17 @@ void Table::cleanupWorker()
     }
 }
 
+void Table::cleanupStop()
+{
+    cleanupRunning = false;
+}
+
 void LogQueue::stop()
 {
+    if (!running)
+        return;
+
     running = false;
+
     cv.notify_all();
 }
