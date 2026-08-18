@@ -11,6 +11,7 @@
 ![C++](https://img.shields.io/badge/C++-17-blue?style=for-the-badge\&logo=cplusplus)
 ![Framework](https://img.shields.io/badge/Framework-Crow-orange?style=for-the-badge)
 ![Database](https://img.shields.io/badge/Database-MongoDB-green?style=for-the-badge\&logo=mongodb)
+![Logs](https://img.shields.io/badge/Logging-SQLite-blue?style=for-the-badge&logo=sqlite)
 ![Cache](https://img.shields.io/badge/Cache-Redis-red?style=for-the-badge\&logo=redis)
 ![Build](https://img.shields.io/badge/Build-CMake-blueviolet?style=for-the-badge\&logo=cmake)
 ![Platform](https://img.shields.io/badge/Platform-Arch%20Linux-1793D1?style=for-the-badge\&logo=arch-linux)
@@ -79,6 +80,7 @@ This project is being developed with the following objectives:
 * OTP-based verification
 * JWT generation after successful verification
 * Password hashing using Argon2id
+* Secure password reset
 
 ---
 
@@ -165,6 +167,18 @@ The application uses **Brevo REST API** for:
 <img src="Frontend/assets/otp-verification.png" width="600">
 </p>
 
+## Forget Page 
+
+<p align="centre">
+<img src="Frontend/assets/Forget-page.png" width="600">
+</p>
+
+## Front Page
+
+<p align="centre">
+<img src="Frontend/assets/Front-page.png" width="600">
+</p>
+
 ---
 
 # 🏗 Technology Stack
@@ -220,6 +234,8 @@ Passwords are never stored in plaintext.
 OTP sessions expire automatically.
 
 Login abuse is mitigated through Redis-based attempt limiting.
+
+Password reset through redis.
 
 ---
 
@@ -573,15 +589,60 @@ The backend is intentionally divided into independent modules so future componen
 │   │   └── jwt-cpp
 │   │
 │   ├── Headers
+│   │   ├── AuditLogger.h
+│   │   ├── AuditLogs.h
 │   │   ├── crypto_utils.h
 │   │   ├── database.h
 │   │   ├── env_config.h
 │   │   ├── JWT_token.h
 │   │   ├── Logger.h
+│   │   ├── LogQueue.h
 │   │   ├── Paths.h
 │   │   ├── Redis.h
-│   │   └── routes.h
+│   │   ├── routes.h
+│   │   ├── SQLite.h
+│   │   └── Tables.h
 │   │
+│   ├── MongoDB
+│   │   ├── forget_auth.cpp
+│   │   ├── login_auth.cpp
+│   │   ├── Logs_auth.cpp
+│   │   └── signup_auth.cpp
+│   │
+│   ├── Redis
+│   │   ├── AttemptManager.cpp
+│   │   ├── OTP.cpp
+│   │   ├── Redis_Start.cpp
+│   │   └── Reset_Pass.cpp
+│   │
+│   ├── Routes
+│   │   ├── Protected
+│   │   │   └── Front_Route.cpp
+│   │   │
+│   │   ├── Public
+│   │   │   ├── Forget_Route.cpp
+│   │   │   ├── Home_Route.cpp
+│   │   │   ├── Login_Route.cpp
+│   │   │   ├── OTP_Route.cpp
+│   │   │   └── Signup_Route.cpp
+│   │
+│   ├── Scripts
+│   │   ├── build.sh
+│   │   └── run.sh
+│   │
+│   ├── SQLite
+│   │   ├── Data
+│   │   │   └── audit_logs.db
+│   │   │
+│   │   ├── SQLite_data
+│   │   │   └── SQLite.db
+│   │   │
+│   │   ├── AuditLogger.cpp
+│   │   ├── AuditLogs.cpp
+│   │   ├── LogQueue.cpp
+│   │   ├── SQLite.cpp
+│   │   └── Tables.cpp
+│   │   
 │   ├── src
 │   │   ├── crypto_utils.cpp
 │   │   ├── database.cpp
@@ -589,26 +650,14 @@ The backend is intentionally divided into independent modules so future componen
 │   │   ├── JWT_token.cpp
 │   │   ├── login.cpp
 │   │   ├── otp.cpp
-│   │   ├── Redis.cpp
 │   │   ├── Routes_Manager.cpp
 │   │   └── signup.cpp
-│   │
-│   ├── Database_check
-│   │   ├── login_auth.cpp
-│   │   ├── signup_auth.cpp
-│   │   └── Logs_auth.cpp
-│   │
-│   ├── Routes
-│   │   ├── Public
-│   │   └── Protected
-│   │
-│   ├── Scripts
-│   │   ├── build.sh
-│   │   └── run.sh
 │   │
 │   ├── build
 │   ├── main.cpp
 │   └── CMakeLists.txt
+│   └── .env.example
+│   └── .env
 │
 ├── Frontend
 │   ├── HTML
@@ -616,7 +665,9 @@ The backend is intentionally divided into independent modules so future componen
 │   ├── Script
 │   └── assets
 │
-└── README.md
+├── README.md
+└── .gitignore
+
 ```
 
 ---
@@ -634,8 +685,10 @@ Responsibilities include:
 * OTP management
 * Redis communication
 * MongoDB interaction
+* SQLite insertion
 * Logging
 * Route registration
+* Asynchronous Logs saving 
 
 ---
 
@@ -652,6 +705,34 @@ Current modules include:
 * Logger
 * Environment Configuration
 * Route Definitions
+* SQLite
+
+---
+
+## Redis/
+
+Required for dynamic data storage for an particular time period
+
+Current module include:
+
+* Attempt limiting
+* OTP verification and insertion
+* Redis server setup
+* Password reset feature
+
+---
+
+## SQLite/
+ 
+Used to save an second copy of Logs to prevent loss of Data(Currently Logs only)
+
+Current module contains:
+
+Copy of Data on local disk
+AuditLogs
+Persistent queue
+SQLite initialization
+Tables for sqlite
 
 ---
 
@@ -665,13 +746,26 @@ Examples:
 * Login
 * OTP
 * JWT
-* Redis
 * MongoDB
 * Environment Loader
+* Routes
+* Forget password
+
+## External/
+
+Contains required repo 
+
+### Crow/
+
+Contains files required for web service
+
+### jwt-cpp/
+
+Required for JWT token generation for protected route access
 
 ---
 
-## Database_check/
+## MongoDB/
 
 Responsible for authentication-related database operations.
 
@@ -680,6 +774,7 @@ Current responsibilities include:
 * Signup validation
 * Login verification
 * Log insertion
+* Forget password verification and insertion
 
 ---
 
@@ -698,12 +793,14 @@ Examples:
 * Signup
 * Login
 * OTP
+* Home
+* Forget
 
 ### Protected Routes
 
 Reserved for authenticated endpoints.
 
-(Currently under development.)
+* Front
 
 ---
 
@@ -930,13 +1027,21 @@ Authentication Success
 
 | Method | Endpoint    | Description                         |
 | ------ | ----------- | ----------------------------------- |
-| POST   | /signup     | Register a new user                 |
-| POST   | /login      | Verify credentials and generate OTP |
+| POST   | /api/signup | Register a new user                 |
+| POST   | /api/forget | Reset the password                  |
+| POST   | /api/login  | Verify credentials and generate OTP |
 | POST   | /verify-otp | Verify OTP and generate JWT         |
-| GET    | /verify     | Verify active authentication token  |
+| POST   |/api/Pass-reset | Verify OTP and generate JWT      |
+| GET    | /signup     | SIGNUP page                         |
+| GET    | /send-otp   | Send otp to users email             |
 | GET    | /otp        | OTP page                            |
-| GET    | /home       | Landing page                        |
+| GET    | /           | Landing page                        |
+| GET    | /login      | Login Page                          |
 | GET    | /logout     | Logout user                         |
+| GET    | /forget     | FORGET page                         |
+| GET    | /Pass-reset | Password Reset page                 |
+| GET    | /Front-page | Front page                          |
+
 
 ---
 
@@ -1026,6 +1131,7 @@ Current third-party libraries used by the project.
 | Snappy           | Compression dependency    |
 | Zstandard        | Compression dependency    |
 | zlib             | Compression dependency    |
+| SQLite           | sqlite3                   |
 
 ---
 
@@ -1112,6 +1218,7 @@ Before building the project, ensure the following tools are installed.
 * redis-plus-plus
 * hiredis
 * YAY
+* SQLite
 
 ---
 
@@ -1517,6 +1624,7 @@ This project has been an opportunity to gain practical experience with:
 * Build Systems
 * System Design
 * Software Architecture
+* SQLite database
 
 ---
 
