@@ -176,7 +176,8 @@ The application uses **Brevo REST API** for:
 ## Front Page
 
 <p align="centre">
-<img src="Frontend/assets/Front-page.png" width="600">
+<img src="Frontend/assets/Front-page1.png" width="600">
+<img src="Frontend/assets/Front-page2.png" width="600">
 </p>
 
 ---
