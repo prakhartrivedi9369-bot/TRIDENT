@@ -1,14 +1,14 @@
 #pragma once
 #include <string>
 #include "jwt.h"
+#include <optional>
 
 using namespace std;
 
 namespace AuthUtils {
 
     string create_jwt_token(const string& user_id);
-    string verify_jwt_token(const string& token);
+    optional<string> verify_jwt_token(const string& token);
     string build_auth_cookie(const string& token);
+    std::string build_logout_cookie();
 }
-
-string generate_reset_token();

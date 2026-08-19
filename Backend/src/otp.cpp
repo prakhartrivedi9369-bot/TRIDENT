@@ -8,6 +8,7 @@
 #include <iostream>
 #include "Redis.h"
 #include "AuditLogger.h"
+#include "JWT_token.h"
 
 using namespace std;
 
@@ -45,7 +46,10 @@ VerifyOtpResult verifyOTP(const string& email,const string& enteredOtp, RedisMan
        AuditLogger.logOtpSentFailure(email,IP,"OTP EXPIRED");
 
     if(result.message == "OTP_VERIFIED")
+    {
        AuditLogger.logOtpSentSuccess(email,IP,"OTP_VERIFIED");
+       string token = AuthUtils::create_jwt_token(email);
+    }
 
     if(result.message == "WRONG_OTP")
        AuditLogger.logOtpSentFailure(email,IP,"WRONG_OTP");

@@ -20,7 +20,7 @@ struct VerifyOtpResult
 {
     bool success;
     optional<string> usecase;
-    optional<string> reset_token;
+    optional<string> JWT_token;
     string message;
 };
 
