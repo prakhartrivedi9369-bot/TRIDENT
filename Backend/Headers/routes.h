@@ -12,6 +12,7 @@ void register_Login_Routes(crow::SimpleApp& app, RedisManager &RedisManager,Audi
 void register_Signup_Routes(crow::SimpleApp& app,AuditLogger &AuditLogger);
 void register_Otp_Routes(crow::SimpleApp& app,RedisManager& RedisManager,AuditLogger &AuditLogger);
 void register_forget_Routes(crow::SimpleApp& app,RedisManager &RedisManager,AuditLogger &AuditLogger);
+void register_JWT_check_Routes(crow::SimpleApp& app,RedisManager &RedisManager,AuditLogger &AuditLogger);
 
 
 //Protected Routes

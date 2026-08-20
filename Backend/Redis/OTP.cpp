@@ -37,7 +37,8 @@ VerifyOtpResult RedisManager::verifyOtp(const string &email, const string &user_
         string otp_key = "otp:" + email; 
         string usecase_key = "usecase:" + email;
 
-        string reset_token = generate_reset_token();
+        string reset_token = AuthUtils::create_jwt_token(email);
+        string JWT_token = AuthUtils::create_jwt_token(email);
 
         auto stored_otp = redis.get(otp_key);
         auto stored_usecase = redis.get(usecase_key);
@@ -49,7 +50,8 @@ VerifyOtpResult RedisManager::verifyOtp(const string &email, const string &user_
                 false,
                 nullopt,
                 nullopt,
-                "OTP EXPIRED"
+                "OTP EXPIRED",
+                nullopt
             };
         }
 
@@ -57,13 +59,15 @@ VerifyOtpResult RedisManager::verifyOtp(const string &email, const string &user_
         if(*stored_otp == user_otp)
         {
             redis.set("token_email:" + reset_token,email,chrono::seconds(300));
+            redis.set("JWT_token:" + JWT_token,email,chrono::seconds(86400));
             redis.del(otp_key); 
             redis.del(usecase_key); // Instant Delete verify hote hi!
             return {
                 true,
                 stored_usecase,
                 reset_token,
-                "OTP_VERIFIED"
+                "OTP_VERIFIED",
+                JWT_token
             };
         }
 
@@ -72,7 +76,8 @@ VerifyOtpResult RedisManager::verifyOtp(const string &email, const string &user_
             false,
             nullopt,
             nullopt,
-            "WRONG_OTP"
+            "WRONG_OTP",
+            nullopt
         };
     }
     catch(const sw::redis::Error &e)
@@ -82,7 +87,8 @@ VerifyOtpResult RedisManager::verifyOtp(const string &email, const string &user_
             false,
             nullopt,
             nullopt,
-            "Redis Error"
+            "Redis Error",
+            nullopt
         };
     }
 }

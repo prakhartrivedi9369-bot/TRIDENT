@@ -24,7 +24,7 @@ string RedisManager::Reset_token_check(const string& reset_token,RedisManager& R
         }
 
         string email = *stored_token;
-
+        
         redis.del(token_key);
         
         return email;

@@ -13,4 +13,5 @@ void registerRoutes(crow::SimpleApp& app, RedisManager& RedisManager,AuditLogger
     register_Otp_Routes(app,RedisManager,AuditLogger);
     register_forget_Routes(app,RedisManager,AuditLogger);
     register_Front_Routes(app);
+    register_JWT_check_Routes(app,RedisManager,AuditLogger& AuditLogger);
 }

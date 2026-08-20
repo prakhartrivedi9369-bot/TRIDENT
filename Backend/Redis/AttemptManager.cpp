@@ -67,7 +67,6 @@ int RedisManager::Attempt_check(const string& email,const string& IP,const strin
     {
        return increment_attempt(email,IP,password);
     }
-    cout<<"fuck"<<endl;
     if(!stored_email_attempt || !stored_ip_attempt)
     {
         return 3;

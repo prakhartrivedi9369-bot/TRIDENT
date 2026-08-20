@@ -20,8 +20,9 @@ struct VerifyOtpResult
 {
     bool success;
     optional<string> usecase;
-    optional<string> JWT_token;
+    optional<string> reset_token;
     string message;
+    optional<string> JWT_token;
 };
 
 class RedisManager

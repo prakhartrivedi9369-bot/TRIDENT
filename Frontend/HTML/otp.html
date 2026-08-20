@@ -489,8 +489,8 @@ form.addEventListener("submit", async (e) => {
                 email: email,
                 otp: code
 
-            })
-
+            }),
+            credentials: 'include'
         });
 
         const result = await response.json();

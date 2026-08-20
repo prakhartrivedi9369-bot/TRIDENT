@@ -12,3 +12,5 @@ namespace AuthUtils {
     string build_auth_cookie(const string& token);
     std::string build_logout_cookie();
 }
+
+bool verify_JWT_token(const string& jwt);
