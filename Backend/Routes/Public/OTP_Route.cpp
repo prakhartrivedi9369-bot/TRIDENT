@@ -35,7 +35,6 @@ void register_Otp_Routes(crow::SimpleApp& app,RedisManager& RedisManager,AuditLo
             
            string email = body["email"].s();
            string usecase = body["usecase"].s();
-           cout<<"fuck"<<endl;
            string otp = generateOTP();
 
            cout<<otp<<endl;

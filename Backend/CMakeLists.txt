@@ -37,14 +37,18 @@ add_executable(my_app
                MongoDB/signup_auth.cpp        
                Redis/AttemptManager.cpp
                Redis/OTP.cpp
+               Redis/Redis_JWT_check.cpp
                Redis/Redis_Start.cpp
                Redis/Reset_Pass.cpp
                Routes/Protected/Front_Route.cpp
+               Routes/Public/404_Not_Found.cpp
                Routes/Public/Forget_Route.cpp
                Routes/Public/Home_Route.cpp
+               Routes/Public/JWT_check.cpp
                Routes/Public/Login_Route.cpp
                Routes/Public/OTP_Route.cpp
                Routes/Public/Signup_Route.cpp
+               src/auth_helper.cpp
                src/crypto_utils.cpp
                src/database.cpp
                src/env_config.cpp
@@ -53,6 +57,7 @@ add_executable(my_app
                src/login.cpp
                src/otp.cpp
                src/Routes_Manager.cpp
+               src/SHA256.cpp
                src/signup.cpp 
                )
 

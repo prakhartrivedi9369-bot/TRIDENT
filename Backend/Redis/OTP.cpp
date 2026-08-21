@@ -39,6 +39,7 @@ VerifyOtpResult RedisManager::verifyOtp(const string &email, const string &user_
 
         string reset_token = AuthUtils::create_jwt_token(email);
         string JWT_token = AuthUtils::create_jwt_token(email);
+        cout<<JWT_token<<endl;
 
         auto stored_otp = redis.get(otp_key);
         auto stored_usecase = redis.get(usecase_key);
@@ -58,8 +59,9 @@ VerifyOtpResult RedisManager::verifyOtp(const string &email, const string &user_
         //Case 2. OTP match ho gaya
         if(*stored_otp == user_otp)
         {
+            string hashed = sha256_hash(JWT_token);
             redis.set("token_email:" + reset_token,email,chrono::seconds(300));
-            redis.set("JWT_token:" + JWT_token,email,chrono::seconds(86400));
+            redis.set("JWT_token:" + hashed,email,chrono::seconds(86400));
             redis.del(otp_key); 
             redis.del(usecase_key); // Instant Delete verify hote hi!
             return {

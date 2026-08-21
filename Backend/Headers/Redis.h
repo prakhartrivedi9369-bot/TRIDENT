@@ -78,4 +78,8 @@ class RedisManager
             const string& reset_token,
             RedisManager& RedisManager
           );
+
+          bool verify_JWT_token(
+            const string& Recieved_JWT_token
+          );
 };

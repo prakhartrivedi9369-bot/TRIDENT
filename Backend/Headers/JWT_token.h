@@ -13,4 +13,4 @@ namespace AuthUtils {
     std::string build_logout_cookie();
 }
 
-bool verify_JWT_token(const string& jwt);
+string sha256_hash(const string& input);

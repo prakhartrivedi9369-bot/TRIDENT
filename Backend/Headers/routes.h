@@ -13,7 +13,7 @@ void register_Signup_Routes(crow::SimpleApp& app,AuditLogger &AuditLogger);
 void register_Otp_Routes(crow::SimpleApp& app,RedisManager& RedisManager,AuditLogger &AuditLogger);
 void register_forget_Routes(crow::SimpleApp& app,RedisManager &RedisManager,AuditLogger &AuditLogger);
 void register_JWT_check_Routes(crow::SimpleApp& app,RedisManager &RedisManager,AuditLogger &AuditLogger);
-
+void register_404_Not_Found_Routes(crow::SimpleApp& app);
 
 //Protected Routes
-void register_Front_Routes(crow::SimpleApp& app);
+void register_Front_Routes(crow::SimpleApp& app,RedisManager &RedisManager);

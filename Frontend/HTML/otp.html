@@ -501,44 +501,75 @@ form.addEventListener("submit", async (e) => {
         {
             if(result.usecase == "FORGET_PASSWORD")
             {
-            verifyBtn.disabled = false;
+               verifyBtn.disabled = false;
 
-            sessionStorage.setItem(
-                "reset_token",
-                result.reset_token
-            );
+               sessionStorage.setItem("reset_token",result.reset_token);
 
-            window.location.href = "/Pass_reset";
+               window.location.href = "/Pass_reset";
 
-            return;
+               return;
             }
 
             if(result.usecase == "LOGIN")
             {
                 verifyBtn.disabled = false;
 
-                sessionStorage.setItem(
-                "reset_token",
-                result.reset_token
-                );
-            
-            window.location.href = "/Front_page";
+                const response2 = await fetch("/JWT_check", {
 
-            return; 
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify({
+
+                    email: email
+                }),
+                    credentials: 'include'
+                });
+
+                const result2 = await response2.json();
+
+                if(result2.success)
+                {            
+                    window.location.href = "/Front_page";
+                }
+                else
+                {
+                    alert(result2.message);
+                }
             }
 
             if(result.usecase == "SIGNUP")
             {
                 verifyBtn.disabled = false;
 
-                sessionStorage.setItem(
-                "reset_token",
-                result.reset_token
-                );
-            
-            window.location.href = "/Front_page";
+                const response2 = await fetch("/JWT_check", {
 
-            return; 
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify({
+
+                    email: email
+                }),
+                    credentials: 'include'
+                });
+
+                const result2 = await response2.json();
+
+                if(result2.success)
+                {            
+                    window.location.href = "/Front_page";
+                }
+                else
+                {
+                    alert(result2.message);
+                }
             }
         }
 
