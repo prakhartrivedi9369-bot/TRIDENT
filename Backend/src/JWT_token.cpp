@@ -21,7 +21,8 @@ namespace AuthUtils {
         return SECRET_KEY;
     }
 
-    string create_jwt_token(const string& user_id) {
+    string create_jwt_token(const string& user_id)
+    {
         return jwt::create()
             .set_type("JWT")
             .set_issuer("your_app")
@@ -29,32 +30,6 @@ namespace AuthUtils {
             .set_expires_in(chrono::seconds{3600 * 24})
             .set_payload_claim("user_id", jwt::claim(user_id))
             .sign(jwt::algorithm::hs256{get_secret_key()});
-    }
-
-    optional<string> verify_jwt_token(const string& token) {
-        try {
-            auto decoded = jwt::decode(token);
-
-            auto verifier = jwt::verify()
-                .allow_algorithm(jwt::algorithm::hs256{get_secret_key()})
-                .with_issuer("your_app");
-
-            verifier.verify(decoded);
-
-            if (!decoded.has_payload_claim("user_id")) {
-                cerr << "[JWT] token verified but user_id claim missing" << endl;
-                return nullopt;
-            }
-
-            return decoded.get_payload_claim("user_id").as_string();
-
-        } catch (const jwt::error::token_verification_exception& e) {
-            cerr << "[JWT] verification failed: " << e.what() << endl;
-            return nullopt;
-        } catch (const exception& e) {
-            cerr << "[JWT] decode error: " << e.what() << endl;
-            return nullopt;
-        }
     }
 
     string build_auth_cookie(const string& token) {

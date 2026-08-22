@@ -1,0 +1,239 @@
+/* --- RESET & BASE STYLES --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #0a0e17;
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        /* --- BACKGROUND ANIMATION --- */
+        .bg-glow {
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(0, 230, 118, 0.08) 0%, rgba(0,0,0,0) 70%);
+            top: -10%;
+            right: -10%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* --- TICKER TAPE --- */
+        .ticker-wrap {
+            width: 100%;
+            overflow: hidden;
+            background: rgba(18, 26, 41, 0.8);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 10px 0;
+            backdrop-filter: blur(10px);
+        }
+
+        .ticker {
+            display: flex;
+            white-space: nowrap;
+            animation: tickerMove 30s linear infinite;
+        }
+
+        .ticker-item {
+            display: inline-block;
+            padding: 0 30px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .up { color: #00e676; }
+        .down { color: #ff3d00; }
+
+        @keyframes tickerMove {
+            0% { transform: translate3d(0, 0, 0); }
+            100% { transform: translate3d(-50%, 0, 0); }
+        }
+
+        /* --- NAVIGATION --- */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 8%;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            background: linear-gradient(45deg, #00e676, #00b0ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+
+        nav ul li a {
+            color: #94a3b8;
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: color 0.3s;
+        }
+
+        nav ul li a:hover {
+            color: #00e676;
+        }
+
+        .btn-nav {
+            background: transparent;
+            border: 1px solid #00e676;
+            color: #00e676;
+            padding: 8px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-nav:hover {
+            background: #00e676;
+            color: #0a0e17;
+            box-shadow: 0 0 15px rgba(0, 230, 118, 0.4);
+        }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            align-items: center;
+            padding: 60px 8%;
+            min-height: calc(100vh - 120px);
+            gap: 40px;
+        }
+
+        .hero-text h1 {
+            font-size: 3.5rem;
+            line-height: 1.2;
+            margin-bottom: 20px;
+        }
+
+        .hero-text h1 span {
+            color: #00b0ff;
+        }
+
+        .hero-text p {
+            color: #94a3b8;
+            font-size: 1.1rem;
+            margin-bottom: 35px;
+            line-height: 1.6;
+        }
+
+        .cta-btns {
+            display: flex;
+            gap: 20px;
+        }
+
+        .btn-primary {
+            background: #00e676;
+            color: #0a0e17;
+            padding: 15px 35px;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.3s;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0, 230, 118, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+            padding: 15px 35px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* --- LIVE CHART WIDGET (REALISTIC UI) --- */
+        .chart-container {
+            background: rgba(18, 26, 41, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 24px;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            position: relative;
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .asset-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .asset-logo {
+            width: 40px;
+            height: 40px;
+            background: #00b0ff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .asset-price {
+            text-align: right;
+        }
+
+        #live-price {
+            font-size: 1.4rem;
+            font-weight: 700;
+            transition: color 0.3s ease;
+        }
+
+        canvas {
+            width: 100%;
+            height: 250px;
+            display: block;
+        }
+
+        /* --- RESPONSIVE DESIGN --- */
+        @media (max-width: 968px) {
+            .hero {
+                grid-template-columns: 1fr;
+                text-align: center;
+                padding-top: 40px;
+            }
+            .cta-btns {
+                justify-content: center;
+            }
+            nav ul {
+                display: none; /* Keep it clean for demo */
+            }
+        }

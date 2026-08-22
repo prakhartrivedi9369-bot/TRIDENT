@@ -27,6 +27,33 @@ void register_Otp_Routes(crow::SimpleApp& app,RedisManager& RedisManager,AuditLo
            
            return crow::response (buffer.str());
      });
+
+     CROW_ROUTE(app, "/otp.css")([]()
+     {
+           ifstream file(Paths::CSS + "otp.css");
+
+           stringstream buffer;
+           buffer << file.rdbuf();
+
+           crow::response res(buffer.str());
+           res.set_header("Content-Type", "text/css");
+
+           return res;
+     });
+
+     CROW_ROUTE(app, "/otp.js")([]()
+     {
+           ifstream file(Paths::JS+ "otp.js");
+
+           stringstream buffer;
+           buffer << file.rdbuf();
+
+           crow::response res(buffer.str());
+           res.set_header("Content-Type", "text/js");
+
+           return res;
+     });
+
      CROW_ROUTE(app, "/send-otp").methods("POST"_method)([&RedisManager,&AuditLogger](const crow::request& req)
      {
            string IP=req.remote_ip_address;
@@ -76,11 +103,11 @@ void register_Otp_Routes(crow::SimpleApp& app,RedisManager& RedisManager,AuditLo
            json["success"] = result.success;
            json["message"] = result.message;
 
-           if (result.usecase)
+           if(result.usecase)
            {
               json["usecase"] = *result.usecase;
            }
-           if (result.reset_token) 
+           if(result.reset_token) 
            {
               json["reset_token"] = *result.reset_token;
            }

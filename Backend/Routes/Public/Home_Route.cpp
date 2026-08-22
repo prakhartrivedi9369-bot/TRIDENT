@@ -18,4 +18,30 @@ void register_Home_Routes(crow::SimpleApp& app)
          
          return crow::response(buffer.str());
      });
+
+     CROW_ROUTE(app, "/index.css")([]()
+     {
+           ifstream file(Paths::CSS + "index.css");
+
+           stringstream buffer;
+           buffer << file.rdbuf();
+
+           crow::response res(buffer.str());
+           res.set_header("Content-Type", "text/css");
+
+           return res;
+     });
+
+     CROW_ROUTE(app, "/index.js")([]()
+     {
+           ifstream file(Paths::JS+ "index.js");
+
+           stringstream buffer;
+           buffer << file.rdbuf();
+
+           crow::response res(buffer.str());
+           res.set_header("Content-Type", "text/js");
+
+           return res;
+     });
 }

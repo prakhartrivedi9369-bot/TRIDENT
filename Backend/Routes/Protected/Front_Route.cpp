@@ -30,4 +30,29 @@ void register_Front_Routes(crow::SimpleApp& app,RedisManager &RedisManager)
         res.set_header("Content-Type", "text/html");
         return res;
      });  
+
+     CROW_ROUTE(app, "/Front.css")([]()
+     {
+           ifstream file(Paths::CSS + "Front.css");
+
+           stringstream buffer;
+           buffer << file.rdbuf();
+
+           crow::response res(buffer.str());
+           res.set_header("Content-Type", "text/css");
+
+           return res;
+     });
+     CROW_ROUTE(app, "/Front.js")([]()
+     {
+           ifstream file(Paths::JS+ "Front.js");
+
+           stringstream buffer;
+           buffer << file.rdbuf();
+
+           crow::response res(buffer.str());
+           res.set_header("Content-Type", "text/js");
+
+           return res;
+     });
 }

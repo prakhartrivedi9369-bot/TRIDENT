@@ -23,6 +23,33 @@ void register_forget_Routes(crow::SimpleApp& app,RedisManager& RedisManager,Audi
          
          return crow::response(buffer.str());
      });
+
+     CROW_ROUTE(app, "/Forget.css")([]()
+     {
+           ifstream file(Paths::CSS + "Forget.css");
+
+           stringstream buffer;
+           buffer << file.rdbuf();
+
+           crow::response res(buffer.str());
+           res.set_header("Content-Type", "text/css");
+
+           return res;
+     });
+
+     CROW_ROUTE(app, "/Forget.js")([]()
+     {
+           ifstream file(Paths::JS+ "Forget.js");
+
+           stringstream buffer;
+           buffer << file.rdbuf();
+
+           crow::response res(buffer.str());
+           res.set_header("Content-Type", "text/js");
+
+           return res;
+     });
+
      CROW_ROUTE(app, "/api/forget").methods(crow::HTTPMethod::POST)([&AuditLogger](const crow::request& req)
      {
              crow::response res;
@@ -40,6 +67,33 @@ void register_forget_Routes(crow::SimpleApp& app,RedisManager& RedisManager,Audi
 
              return crow::response(buffer.str());
      });
+
+     CROW_ROUTE(app, "/Password_Reset.css")([]()
+     {
+           ifstream file(Paths::CSS + "Password_Reset.css");
+
+           stringstream buffer;
+           buffer << file.rdbuf();
+
+           crow::response res(buffer.str());
+           res.set_header("Content-Type", "text/css");
+
+           return res;
+     });
+
+     CROW_ROUTE(app, "/Password_Reset.js")([]()
+     {
+           ifstream file(Paths::JS+ "Password_Reset.js");
+
+           stringstream buffer;
+           buffer << file.rdbuf();
+
+           crow::response res(buffer.str());
+           res.set_header("Content-Type", "text/js");
+
+           return res;
+     });
+
      CROW_ROUTE(app, "/api/Pass-reset").methods(crow::HTTPMethod::POST)([&RedisManager,&AuditLogger](const crow::request& req)
      {
              crow::response res;

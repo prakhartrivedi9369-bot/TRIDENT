@@ -22,6 +22,33 @@ void register_Signup_Routes(crow::SimpleApp& app,AuditLogger &AuditLogger)
          
          return crow::response(buffer.str());
      });
+
+     CROW_ROUTE(app, "/signup.css")([]()
+     {
+           ifstream file(Paths::CSS + "signup.css");
+
+           stringstream buffer;
+           buffer << file.rdbuf();
+
+           crow::response res(buffer.str());
+           res.set_header("Content-Type", "text/css");
+
+           return res;
+     });
+
+     CROW_ROUTE(app, "/signup.js")([]()
+     {
+           ifstream file(Paths::JS+ "signup.js");
+
+           stringstream buffer;
+           buffer << file.rdbuf();
+
+           crow::response res(buffer.str());
+           res.set_header("Content-Type", "text/js");
+
+           return res;
+     });
+
      CROW_ROUTE(app, "/api/signup").methods(crow::HTTPMethod::POST)([&AuditLogger](const crow::request& req)
      {
              crow::response res;

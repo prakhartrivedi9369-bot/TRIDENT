@@ -1,0 +1,281 @@
+:root {
+            --bg-color: #080b11;
+            --card-bg: rgba(17, 22, 34, 0.75);
+            --accent-primary: #00e676; /* Bullish Green */
+            --accent-secondary: #00b0ff; /* Electric Blue */
+            --text-main: #ffffff;
+            --text-muted: #8a99ad;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --error-color: #ff5252;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: '-apple-system', BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Animated Background Chart Lines for Stock Market Vibe */
+        .bg-grid {
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background-image: 
+                linear-gradient(to right, rgba(255,255,255,0.02) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255,255,255,0.02) 1px, transparent 1px);
+            background-size: 40px 40px;
+            transform: rotate(-15deg);
+            z-index: 1;
+            animation: gridMove 20s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { transform: rotate(-15deg) translate(0, 0); }
+            100% { transform: rotate(-15deg) translate(-40px, -40px); }
+        }
+
+        .glow-orb {
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(0, 230, 118, 0.15) 0%, rgba(0,0,0,0) 70%);
+            top: -10%;
+            right: -10%;
+            z-index: 1;
+            filter: blur(50px);
+            animation: float 8s ease-in-out infinite alternate;
+        }
+
+        .glow-orb-2 {
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(0, 176, 255, 0.1) 0%, rgba(0,0,0,0) 70%);
+            bottom: -20%;
+            left: -10%;
+            z-index: 1;
+            filter: blur(60px);
+            animation: float 12s ease-in-out infinite alternate-reverse;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0) scale(1); }
+            100% { transform: translateY(-30px) scale(1.1); }
+        }
+
+        /* Signup Container */
+        .signup-container {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 450px;
+            padding: 2.5rem;
+            background: var(--card-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+            transform: translateY(20px);
+            opacity: 0;
+            animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* Header Styling */
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+            display: inline-block;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* Form Controls */
+        .form-group {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+            transition: color 0.3s ease;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.85rem 1rem;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-main);
+            font-size: 0.95rem;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--accent-secondary);
+            background: rgba(255, 255, 255, 0.06);
+            box-shadow: 0 0 0 4px rgba(0, 176, 255, 0.15);
+        }
+
+        /* Input Focus Line Animation */
+        .input-bar {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            height: 2px;
+            width: 0;
+            background: linear-gradient(to right, var(--accent-primary), var(--accent-secondary));
+            transition: all 0.4s ease;
+        }
+
+        .form-group input:focus ~ .input-bar {
+            width: 100%;
+            left: 0;
+        }
+
+        /* Strength Meter */
+        .password-strength {
+            height: 4px;
+            width: 100%;
+            background: rgba(255,255,255,0.05);
+            margin-top: 0.5rem;
+            border-radius: 2px;
+            overflow: hidden;
+            display: none;
+        }
+
+        .strength-bar {
+            height: 100%;
+            width: 0;
+            background: var(--error-color);
+            transition: all 0.3s ease;
+        }
+
+        /* Terms Checkbox */
+        .terms-container {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            cursor: pointer;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            user-select: none;
+        }
+
+        .terms-container input {
+            accent-color: var(--accent-primary);
+            margin-top: 2px;
+        }
+
+        .terms-container a {
+            color: var(--accent-secondary);
+            text-decoration: none;
+        }
+
+        .terms-container a:hover {
+            text-decoration: underline;
+        }
+
+        /* Submit Button */
+        .submit-btn {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, var(--accent-primary), #00c853);
+            border: none;
+            border-radius: 8px;
+            color: #000;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 230, 118, 0.3);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Button Ripple Effect Object */
+        .ripple {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            transform: scale(0);
+            animation: rippleEffect 0.6s linear;
+            pointer-events: none;
+        }
+
+        @keyframes rippleEffect {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+
+        /* Footer links */
+        .form-footer {
+            text-align: center;
+            margin-top: 1.5rem;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .form-footer a {
+            color: var(--accent-primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .form-footer a:hover {
+            text-decoration: underline;
+        }

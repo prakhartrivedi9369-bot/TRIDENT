@@ -18,7 +18,6 @@ bool RedisManager::verify_JWT_token(const string& Recieved_JWT_token)
      {
           // Key mil gayi!
           return true;
-
      }
      else
      {
