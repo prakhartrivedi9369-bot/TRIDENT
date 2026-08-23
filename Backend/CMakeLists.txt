@@ -41,12 +41,12 @@ add_executable(my_app
                Redis/Redis_Start.cpp
                Redis/Reset_Pass.cpp
                Routes/Protected/Front_Route.cpp
+               Routes/Protected/JWT_check.cpp
+               Routes/Protected/OTP_Route.cpp
                Routes/Public/404_Not_Found.cpp
                Routes/Public/Forget_Route.cpp
                Routes/Public/Home_Route.cpp
-               Routes/Public/JWT_check.cpp
                Routes/Public/Login_Route.cpp
-               Routes/Public/OTP_Route.cpp
                Routes/Public/Signup_Route.cpp
                src/auth_helper.cpp
                src/crypto_utils.cpp

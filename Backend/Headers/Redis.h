@@ -4,6 +4,8 @@
 #include <sw/redis++/redis++.h>
 #include <string>
 #include <optional>
+#include "db_types.h"
+#include "database.h"
 
 using namespace std;
 
@@ -50,17 +52,18 @@ class RedisManager
             const string &email
           );
 
-          int Attempt_check(
+          DBStatus Attempt_check(
             const string &email,
             const string &IP,
             const string &password,
             RedisManager &RedisManager
           );
 
-          int increment_attempt(
+          DBStatus increment_attempt(
             const string &email,
             const string &IP,
-            const string &password
+            const string &password,
+            RedisManager& RedisManager
           );
 
           bool block_user(
@@ -81,5 +84,13 @@ class RedisManager
 
           bool verify_JWT_token(
             const string& Recieved_JWT_token
+          );
+
+          string Temp_JWT_save(
+            const string& email
+          );
+
+          bool Temp_JWT_check(
+            const string& Recieved_JWT
           );
 };

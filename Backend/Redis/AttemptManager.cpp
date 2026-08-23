@@ -52,7 +52,7 @@ bool RedisManager::block_user(const string &email, const string &IP, RedisManage
     }
     return false;
 }
-int RedisManager::Attempt_check(const string& email,const string& IP,const string &password,RedisManager &RedisManager)
+DBStatus RedisManager::Attempt_check(const string& email,const string& IP,const string &password,RedisManager &RedisManager)
 {
     //Variable for Keys
     string email_key = "email_key:" + email;
@@ -65,11 +65,14 @@ int RedisManager::Attempt_check(const string& email,const string& IP,const strin
     //User are not stored in Redis
     if(!stored_email_attempt && !stored_ip_attempt)
     {
-       return increment_attempt(email,IP,password);
+       return increment_attempt(email,IP,password,RedisManager);
     }
     if(!stored_email_attempt || !stored_ip_attempt)
     {
-        return 3;
+        return {
+            "ATTEMPT_LIMIT_EXCEED",
+            nullopt
+        };
     }
 
     int email_attempt = stoi(*stored_email_attempt);
@@ -79,31 +82,36 @@ int RedisManager::Attempt_check(const string& email,const string& IP,const strin
     //Attempt limit exceed
     if((email_attempt>=3) && (ip_attempt>=3))
     {
-       cout<<"fuck Prakhar"<<endl;
        block_user(email,IP,RedisManager);
-       return 3;
+       return {
+            "ATTEMPT_LIMIT_EXCEED",
+            nullopt
+        };
     }
     if((email_attempt>=3) || (ip_attempt>=3))
     {
-        return 3;
+        return {
+            "ATTEMPT_LIMIT_EXCEED",
+            nullopt
+        };
     }
 
-    return increment_attempt(email,IP,password);
+    return increment_attempt(email,IP,password,RedisManager);
 }
-int RedisManager::increment_attempt(const string &email,const string &IP,const string &password)
+DBStatus RedisManager::increment_attempt(const string &email,const string &IP,const string &password,RedisManager& RedisManager)
 {
-    int status = verifyCredentialsInDB(email,password);
+    DBStatus status = verifyCredentialsInDB(email,password,RedisManager);
 
         //Variable for Keys
         string email_key = "email_key:" + email;
         string IP_key = "IP_key:" + IP;
 
-        if(status == 1)
+        if(status.message == "SUCCESS")
         {
            reset_attempt(email,IP);
            return status;
         }
-        else if(status ==2)
+        else if(status.message == "WRONG_PASSWORD")
         {
            auto E_attempts = redis.incr(email_key);
 

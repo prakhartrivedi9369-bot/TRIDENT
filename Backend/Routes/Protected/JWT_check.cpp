@@ -10,6 +10,13 @@ void register_JWT_check_Routes(crow::SimpleApp& app,RedisManager &RedisManager,A
 {
     CROW_ROUTE(app, "/JWT_check").methods("POST"_method)([&RedisManager, &AuditLogger](const crow::request& req)
     {
+        if (!check_authentication(req, RedisManager))
+        {
+            crow::response res(302);
+            res.set_header("Location", "/404_Not_Found");
+            return res;
+        }
+
         string IP = req.remote_ip_address;
         crow::json::wvalue json;
         crow::response res;

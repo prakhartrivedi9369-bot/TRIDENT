@@ -4,6 +4,7 @@
 #include "Logger.h"
 #include "Redis.h"
 #include "AuditLogger.h"
+#include "JWT_token.h"
 
 using namespace std;
 
@@ -31,27 +32,28 @@ void handleLogin(const crow::request& req, crow::response& res,RedisManager &Red
 
             string password = json_data["password"].s();
         
-            int Attempt_status = RedisManager.Attempt_check(email,IP,password,RedisManager);
+            DBStatus Attempt_status = RedisManager.Attempt_check(email,IP,password,RedisManager);
                 // 3.Response Generation (If-Else logic)
-                if(Attempt_status == 1)
+                if(Attempt_status.message == "SUCCESS")
                 {
                      res.code = 201;
                      AuditLogger.logLoginSuccess(email,IP,"Login successful!");
+                     res.set_header("Set-Cookie", AuthUtils::build_auth_cookie(Attempt_status.token));
                      res.body = "{\"status\": \"otp_required\",""\"message\": \"Login successful!\"}";
                 }
-                else if(Attempt_status == 0)
+                else if(Attempt_status.message == "EMAIL_NOT_FOUND_IN_DB")
                 {
                      res.code = 401;
                      AuditLogger.logLoginFailure(email,IP,"Unknown user / No user exist!");
                      res.body = "{\"status\": \"USER_NOT_FOUND\", \"error\": \"Unknown user / No user exist!\"}";
                 }
-                else if(Attempt_status == 2)
+                else if(Attempt_status.message == "WRONG_PASSWORD")
                 {
                      res.code = 404;
                      AuditLogger.logLoginFailure(email,IP,"Invalid_pass");
                      res.body = "{\"status\":\"Invalid_pass\"}";
                 }
-                else if(Attempt_status==3)
+                else if(Attempt_status.message == "ATTEMPT_LIMIT_EXCEED")
                 {
                      res.code = 429;
                      AuditLogger.logLoginFailure(email,IP,"Attempt Limit Exceed");

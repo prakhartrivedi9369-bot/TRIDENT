@@ -4,16 +4,19 @@
 #include <mongoc/mongoc.h>
 #include <string>
 #include <iostream>
+#include "Redis.h"
+#include "JWT_token.h"
 
 using namespace std;
 
-// int verifyCredentialsInDB(const string& email, const string& password);
-
-int verifyCredentialsInDB(const string& email, const string& password)
+DBStatus verifyCredentialsInDB(const string& email, const string& password,RedisManager& RedisManager)
 {
       if(!global_db_client)
       {
-           return -1;
+           return {
+               "DATABASE_ERROR",
+               nullopt
+           };
       }
 
      mongoc_collection_t *collection = mongoc_client_get_collection(
@@ -36,7 +39,11 @@ int verifyCredentialsInDB(const string& email, const string& password)
           // Email DB mein nahi mili
           mongoc_cursor_destroy(cursor);
           mongoc_collection_destroy(collection);
-          return 0;
+          return 
+          {
+              "EMAIL_NOT_FOUND_IN_DB",
+              nullopt
+          };
      }
 
      // STEP 3: DB se hashed password nikalo
@@ -54,16 +61,29 @@ int verifyCredentialsInDB(const string& email, const string& password)
      // STEP 4: Hash empty check
      if(stored_hash.empty())
      {
-          return -1; // Server side problem
+          return 
+          {
+               "SERVER SIDE PROBLEM", // Server side problem
+               nullopt
+          };
      }
 
      // STEP 5: Libsodium se verify karo
      if(CryptoUtils::verify_password(password, stored_hash))
      {
-          return 1; // ✅ Success
+          string Temp_JWT_token=RedisManager.Temp_JWT_save(email);
+          return 
+          {
+               "SUCCESS",
+               Temp_JWT_token // ✅ Success
+          };
      }
      else
      {
-          return 2; // ❌ Password galat
+          return 
+          {
+               "WRONG_PASSWORD",
+               nullopt
+          };                 // ❌ Password galat
      }
 }

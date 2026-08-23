@@ -1,5 +1,7 @@
-#ifndef DATABASE_H
-#define DATABASE_H
+//#ifndef DATABASE_H
+//#define DATABASE_H
+
+#pragma once
 
 #include <mongoc/mongoc.h>
 #include "crow.h"
@@ -17,10 +19,8 @@ extern mongoc_client_t *global_db_client;
 //Functions declarations
 void init_database();
 void cleanup_database();
-int verifyCredentialsInDB(const string& email, const string& password);
+DBStatus verifyCredentialsInDB(const string& email, const string& password,RedisManager &RedisManager);
 int createUserInDB(const string& username, const string& email, const string& password);
 bool saveLogInDB(AuditLog log);
 int verifyUserInDB(const string& email);
-int New_password(const string& new_password,const string& reset_token,RedisManager& RedisManager,AuditLogger &AuditLogger,const string &IP);
-
-#endif
+int New_password(const string& new_password,const string& reset_token,RedisManager &RedisManager,AuditLogger &AuditLogger,const string &IP);

@@ -1674,7 +1674,7 @@ Have questions or suggestions? Feel free to open an issue on this repository.
 
 <div align="center">
 
-**[prakhartrivedi9369-bot]**
+**[prakhartrivedi9369-bot](https://github.com/prakhartrivedi9369-bot)**
 
 </div>
 
