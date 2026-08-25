@@ -3,6 +3,7 @@
 #include "JWT_token.h"
 #include "Redis.h"
 #include <iostream>
+#include "auth_helper.h"
 
 using namespace std;
 

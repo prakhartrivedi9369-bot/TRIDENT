@@ -7,4 +7,4 @@ using namespace std;
 
 bool check_authentication(const crow::request& req, RedisManager& RedisManager);
 
-
+bool check_temp_authentication(const crow::request& req,RedisManager& RedisManager);

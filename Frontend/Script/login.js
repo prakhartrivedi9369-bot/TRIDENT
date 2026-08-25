@@ -101,7 +101,12 @@ async function handleLogin(event) {
     });
 
     alert("OTP sent");
-    window.location.href="/otp";
+    await fetch('/otp', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+    })
 
 
             }, 1000);

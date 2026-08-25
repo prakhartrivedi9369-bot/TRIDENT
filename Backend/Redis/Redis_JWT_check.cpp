@@ -26,7 +26,7 @@ bool RedisManager::verify_JWT_token(const string& Recieved_JWT_token)
 string RedisManager::Temp_JWT_save(const string& email)
 {
      string Temp_JWT_token = AuthUtils::create_jwt_token(email);
-     string hashed = sha256_hash(JWT_token);
+     string hashed = sha256_hash(Temp_JWT_token);
 
      redis.set("Temp_JWT_token:" + hashed,email,chrono::seconds(120));
 

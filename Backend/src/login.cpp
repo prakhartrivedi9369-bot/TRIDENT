@@ -36,9 +36,11 @@ void handleLogin(const crow::request& req, crow::response& res,RedisManager &Red
                 // 3.Response Generation (If-Else logic)
                 if(Attempt_status.message == "SUCCESS")
                 {
+                     optional<string> optionalStr = Attempt_status.token;
+                     string regularStr = optionalStr.value_or("default value");   
                      res.code = 201;
                      AuditLogger.logLoginSuccess(email,IP,"Login successful!");
-                     res.set_header("Set-Cookie", AuthUtils::build_auth_cookie(Attempt_status.token));
+                     res.set_header("Set-Cookie", AuthUtils::build_auth_cookie(regularStr));
                      res.body = "{\"status\": \"otp_required\",""\"message\": \"Login successful!\"}";
                 }
                 else if(Attempt_status.message == "EMAIL_NOT_FOUND_IN_DB")

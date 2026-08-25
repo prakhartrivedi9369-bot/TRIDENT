@@ -1,6 +1,7 @@
 #include "crow.h"
 #include <string>
 #include "auth_helper.h"
+#include "Redis.h"
 
 using namespace std;
 
@@ -37,5 +38,5 @@ bool check_temp_authentication(const crow::request& req, RedisManager& RedisMana
 
     if (token.empty()) return false;
 
-    return Temp_JWT_check(token);
+    return RedisManager.Temp_JWT_check(token);
 }

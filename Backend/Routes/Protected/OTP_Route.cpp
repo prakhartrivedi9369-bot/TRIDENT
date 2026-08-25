@@ -7,6 +7,7 @@
 #include "Redis.h"
 #include "JWT_token.h"
 #include "AuditLogger.h"
+#include "auth_helper.h"
 
 using namespace std;
 
@@ -16,14 +17,12 @@ VerifyOtpResult verifyOTP(const string& email,const string& enteredOtp,RedisMana
 
 void register_Otp_Routes(crow::SimpleApp& app,RedisManager& RedisManager,AuditLogger &AuditLogger)
 {
-     CROW_ROUTE(app, "/otp")([]()
+     CROW_ROUTE(app, "/otp")([&RedisManager](const crow::request& req)
      {
            if(!check_temp_authentication(req, RedisManager))
            {
               res.set_header("Set-Cookie", AuthUtils::build_logout_cookie());
-              crow::response res(302);
-              res.set_header("Location", "/404_Not_Found");
-              return res;
+              return crow::response.set_header("Location", "/404_Not_Found");
            }
 
            ifstream file(Paths::HTML + "otp.html");
