@@ -3,12 +3,15 @@
 #include "database.h"
 #include "Logger.h"
 #include "AuditLogger.h"
+#include "Redis.h"
+#include "JWT_token.h"
+#include "db_types.h"
 
 using namespace std;
 
-void handle_signup(const crow::request& req,crow::response& res,AuditLogger &AuditLogger);
+void handle_signup(const crow::request& req,crow::response& res,RedisManager& RedisManager,AuditLogger &AuditLogger);
 
-void handle_signup(const crow::request& req, crow::response& res,AuditLogger &AuditLogger)
+void handle_signup(const crow::request& req, crow::response& res,RedisManager& RedisManager,AuditLogger &AuditLogger)
 {
     res.set_header
     ("Content-Type","application/json");
@@ -31,29 +34,34 @@ void handle_signup(const crow::request& req, crow::response& res,AuditLogger &Au
 
          int signup_status = createUserInDB(username,email,password);
 
+         DBStatus Attempt_status = RedisManager.Attempt_check(email,IP,password,RedisManager);
+
          if(signup_status == 1)
          {
+            optional<string> optionalStr = Attempt_status.token;
+            string regularStr = optionalStr.value_or("default value");
             res.code = 200;
             AuditLogger.logSignupSuccess(email,IP,"Signup success");
+            res.set_header("Set-Cookie", AuthUtils::build_auth_cookie(regularStr));
             res.body = "{\"status\":\"otp_required\",""\"message\":\"OTP sent to email\"}";
          }
          else if(signup_status == 0)
          {
              res.code = 409;
              AuditLogger.logSignupFailure(email,IP,"User already exist");
-             res.body = "{\"status\":\"fail\",""\"error\":\"User already exists\"}";
+             res.body = "{\"status\":\"fail\",""\"message\":\"User already exists\"}";
          }
          else
          {
             res.code = 500;
             AuditLogger.logSignupFailure(email,IP,"Database error");
-            res.body = "{\"status\":\"fail\",""\"error\":\"Database error\"}";
+            res.body = "{\"status\":\"fail\",""\"message\":\"Database error\"}";
          }
     }
     catch(const exception& e)
     {
           res.code = 500;
           AuditLogger.logSignupFailure(email,IP,"Internal server error");
-          res.body = "{\"status\":\"fail\",""\"error\":\"Internal server error\"}";
+          res.body = "{\"status\":\"fail\",""\"message\":\"Internal server error\"}";
     }
 }

@@ -6,9 +6,9 @@
 
 using namespace std;
 
-void handle_signup(const crow::request& req,crow::response& res,AuditLogger &AuditLogger);
+void handle_signup(const crow::request& req,crow::response& res,RedisManager& RedisManager,AuditLogger &AuditLogger);
 
-void register_Signup_Routes(crow::SimpleApp& app,AuditLogger &AuditLogger)
+void register_Signup_Routes(crow::SimpleApp& app,RedisManager& RedisManager,AuditLogger &AuditLogger)
 {
      //Signup Route
      CROW_ROUTE(app, "/signup")([]()
@@ -49,10 +49,10 @@ void register_Signup_Routes(crow::SimpleApp& app,AuditLogger &AuditLogger)
            return res;
      });
 
-     CROW_ROUTE(app, "/api/signup").methods(crow::HTTPMethod::POST)([&AuditLogger](const crow::request& req)
+     CROW_ROUTE(app, "/api/signup").methods(crow::HTTPMethod::POST)([&RedisManager,&AuditLogger](const crow::request& req)
      {
              crow::response res;
-             handle_signup(req,res,AuditLogger);
+             handle_signup(req,res,RedisManager,AuditLogger);
              return res;
      });
 }

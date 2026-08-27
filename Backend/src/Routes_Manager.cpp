@@ -9,7 +9,7 @@ void registerRoutes(crow::SimpleApp& app, RedisManager& RedisManager,AuditLogger
 {
     register_Home_Routes(app);
     register_Login_Routes(app,RedisManager,AuditLogger);
-    register_Signup_Routes(app,AuditLogger);
+    register_Signup_Routes(app,RedisManager,AuditLogger);
     register_Otp_Routes(app,RedisManager,AuditLogger);
     register_forget_Routes(app,RedisManager,AuditLogger);
     register_Front_Routes(app,RedisManager);
