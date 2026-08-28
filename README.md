@@ -1196,7 +1196,7 @@ This guide explains how to build and run the project on **Arch Linux**.
 
 > **Note**
 >
-> The project is actively developed and tested on **Arch Linux**. While it may work on other Linux distributions, only Arch Linux is officially documented at the moment.
+> The project is actively developed and tested on  **Arch Linux**. While it may work on other Linux distributions, only Arch Linux is officially documented at the moment.
 
 ---
 
