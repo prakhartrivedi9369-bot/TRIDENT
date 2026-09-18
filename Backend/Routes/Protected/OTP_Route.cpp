@@ -19,13 +19,13 @@ void register_Otp_Routes(crow::SimpleApp& app,RedisManager& RedisManager,AuditLo
 {
      CROW_ROUTE(app, "/otp")([&RedisManager](const crow::request& req)
      {
-        if(!check_temp_authentication(req, RedisManager))
-        {
-           crow::response res(302);
-           res.set_header("Set-Cookie", AuthUtils::build_logout_cookie());
-           res.set_header("Location", "/404_Not_Found");
-           return res;
-        }
+      //  if(!check_temp_authentication(req, RedisManager))
+      //  {
+       //    crow::response res(302);
+       //    res.set_header("Set-Cookie", AuthUtils::build_logout_cookie());
+       //    res.set_header("Location", "/404_Not_Found");
+       //    return res;
+      //  }
 
         ifstream file(Paths::HTML + "otp.html");
 

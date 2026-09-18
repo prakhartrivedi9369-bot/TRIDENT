@@ -8,10 +8,10 @@
 
 using namespace std;
 
-void handle_forget(const crow::request& req,crow::response& res,AuditLogger &AuditLogger);
+void handle_forget(const crow::request& req,crow::response& res,RedisManager &RedisManager,AuditLogger &AuditLogger);
 void Pass_reset(const crow::request& req,crow::response& res,RedisManager& RedisManager,AuditLogger &AuditLogger);
 
-void handle_forget(const crow::request& req, crow::response& res,AuditLogger &AuditLogger)
+void handle_forget(const crow::request& req, crow::response& res,RedisManager &RedisManager,AuditLogger &AuditLogger)
 {
     res.set_header
     ("Content-Type","application/json");

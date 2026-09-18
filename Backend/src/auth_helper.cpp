@@ -26,17 +26,24 @@ bool check_authentication(const crow::request& req, RedisManager& RedisManager)
 bool check_temp_authentication(const crow::request& req, RedisManager& RedisManager)
 {
     string cookie_header = req.get_header_value("Cookie");
-    if (cookie_header.empty()) return false;
-
+    if (cookie_header.empty())
+    {
+        return false;
+    }
     string key = "token=";
     auto pos = cookie_header.find(key);
-    if (pos == std::string::npos) return false;
-
+    if (pos == std::string::npos)
+    { 
+        return false;
+    }
     pos += key.length();
     auto end = cookie_header.find(';', pos);
     string token = cookie_header.substr(pos, end - pos);
 
-    if (token.empty()) return false;
+    if (token.empty())
+    { 
+        return false;
+    }
 
     return RedisManager.Temp_JWT_check(token);
 }

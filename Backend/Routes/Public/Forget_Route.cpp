@@ -3,10 +3,11 @@
 #include "Paths.h"
 #include "database.h"
 #include "AuditLogger.h"
+#include <iostream>
 
 using namespace std;
 
-void handle_forget(const crow::request& req,crow::response& res,AuditLogger &AuditLogger);
+void handle_forget(const crow::request& req,crow::response& res,RedisManager &RedisManager,AuditLogger &AuditLogger);
 void Pass_reset(const crow::request& req,crow::response& res,RedisManager& RedisManager,AuditLogger &AuditLogger);
 
 void register_forget_Routes(crow::SimpleApp& app,RedisManager& RedisManager,AuditLogger &AuditLogger)
@@ -50,10 +51,10 @@ void register_forget_Routes(crow::SimpleApp& app,RedisManager& RedisManager,Audi
            return res;
      });
 
-     CROW_ROUTE(app, "/api/forget").methods(crow::HTTPMethod::POST)([&AuditLogger](const crow::request& req)
+     CROW_ROUTE(app, "/api/forget").methods(crow::HTTPMethod::POST)([&RedisManager,&AuditLogger](const crow::request& req)
      {
              crow::response res;
-             handle_forget(req,res,AuditLogger);
+             handle_forget(req,res,RedisManager,AuditLogger);
              return res;
      });
      CROW_ROUTE(app, "/Pass_reset")([]()
